@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  {% load static %}
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+
+  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>KQMS</h2>
+
+    <a href="#">Dashboard</a>
+
+    <a href="#">Manage Users</a>
+
+    <a href="#">Manage Staff</a>
+
+    <a href="#">Departments</a>
+
+    <a href="#">Services</a>
+
+    <a href="#">Reports</a>
+
+    <a href="{% url 'admin_logout' %}">Logout</a>
+
+</div>
+
+<div class="main">
+
+  <h1>Admin Dashboard</h1>
+
+<div class="cards">
+
+<div class="card">
+  <h3>Total Users</h3>
+<p>150</p>
+</div>
+
+<div class="card">
+  <h3>Total Staff</h3>
+  <p>25</p>
+</div>
+
+<div class="card">
+  <h3>Departments</h3>
+  <p>12</p>
+</div>
+
+<div class="card">
+  <h3>Today's Tokens</h3>
+  <p>310</p>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

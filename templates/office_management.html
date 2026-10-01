@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Office Management - KQMS</title>
+
+    <link rel="stylesheet" href="{% static 'css/office_management.css' %}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>KQMS</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav>
+            <a href="#">Dashboard</a>
+            <a href="#" class="active">Office Management</a>
+            <a href="#">Department Management</a>
+            <a href="#">Staff Management</a>
+            <a href="#">Queue Management</a>
+            <a href="#">Reports</a>
+            <a href="#">Settings</a>
+        </nav>
+
+        <a href="#" class="logout">Logout</a>
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="topbar">
+            <div>
+                <h1>Office Management</h1>
+                <p>Manage government offices in the Kerala Queue Management System.</p>
+            </div>
+
+            <div class="admin-profile">
+                <div class="profile-icon">A</div>
+                <span>Admin</span>
+            </div>
+        </header>
+
+
+        <!-- Statistics -->
+        <section class="stats-container">
+
+            <div class="stat-card">
+                <div class="stat-icon">🏢</div>
+                <div>
+                    <h3>25</h3>
+                    <p>Total Offices</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✓</div>
+                <div>
+                    <h3>22</h3>
+                    <p>Active Offices</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">⏸</div>
+                <div>
+                    <h3>3</h3>
+                    <p>Inactive Offices</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Office Management Section -->
+        <section class="management-section">
+
+            <div class="section-header">
+                <div>
+                    <h2>Office List</h2>
+                    <p>View and manage registered offices.</p>
+                </div>
+
+                <a href="#" class="add-btn">+ Add Office</a>
+            </div>
+
+
+            <!-- Search -->
+            <div class="search-area">
+                <input
+                    type="text"
+                    placeholder="Search office by name or district..."
+                    id="officeSearch"
+                >
+
+                <select>
+                    <option value="">All Districts</option>
+                    <option>Thiruvananthapuram</option>
+                    <option>Kollam</option>
+                    <option>Ernakulam</option>
+                    <option>Kottayam</option>
+                    <option>Kozhikode</option>
+                    <option>Kannur</option>
+                </select>
+
+                <button class="search-btn">Search</button>
+            </div>
+
+
+            <!-- Office Table -->
+            <div class="table-container">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Office ID</th>
+                            <th>Office Name</th>
+                            <th>Office Type</th>
+                            <th>District</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>OFF001</td>
+                            <td>RTO Thiruvananthapuram</td>
+                            <td>RTO</td>
+                            <td>Thiruvananthapuram</td>
+                            <td>
+                                <span class="status active-status">Active</span>
+                            </td>
+                            <td>
+                                <a href="#" class="view-btn">View</a>
+                                <a href="#" class="edit-btn">Edit</a>
+                                <a href="#" class="delete-btn">Delete</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>OFF002</td>
+                            <td>Akshaya Centre</td>
+                            <td>Service Centre</td>
+                            <td>Kollam</td>
+                            <td>
+                                <span class="status active-status">Active</span>
+                            </td>
+                            <td>
+                                <a href="#" class="view-btn">View</a>
+                                <a href="#" class="edit-btn">Edit</a>
+                                <a href="#" class="delete-btn">Delete</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>OFF003</td>
+                            <td>Village Office</td>
+                            <td>Government Office</td>
+                            <td>Ernakulam</td>
+                            <td>
+                                <span class="status inactive-status">Inactive</span>
+                            </td>
+                            <td>
+                                <a href="#" class="view-btn">View</a>
+                                <a href="#" class="edit-btn">Edit</a>
+                                <a href="#" class="delete-btn">Delete</a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

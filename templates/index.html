@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KQMS - Kerala Queue Management System</title>
+
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <h2>KQMS</h2>
+    </div>
+
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Departments</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+
+    <h1>Kerala Queue Management System</h1>
+
+    <p>
+        A smart digital platform for managing queues efficiently in
+        government offices with secure online token booking.
+    </p>
+
+    <a href="#roles" class="btn">Get Started</a>
+
+</section>
+
+<section class="roles" id="roles">
+
+    <h2>Login As</h2>
+
+    <div class="card-container">
+
+        <div class="card">
+            <h3>Administrator</h3>
+            <p>Manage departments, staff and services.</p>
+            <a href="{% url 'admin_login' %}">Admin Login</a>
+        </div>
+
+        <div class="card">
+            <h3>Staff</h3>
+            <p>Manage queues and serve citizens efficiently.</p>
+            <a href="{% url 'staff_login' %}">Staff Login</a>
+        </div>
+
+        <div class="card">
+            <h3>User</h3>
+            <p>Book tokens and track your queue status.</p>
+            <a href="{% url 'user_login' %}">User Login</a>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="features">
+
+    <h2>Key Features</h2>
+
+    <div class="feature-box">
+
+        <div class="feature">
+            <h3>🎫 Online Token Booking</h3>
+            <p>Book your queue token anytime.</p>
+        </div>
+
+        <div class="feature">
+            <h3>📊 Live Queue Status</h3>
+            <p>Track your position in real time.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🏢 Department Management</h3>
+            <p>Organized services across departments.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🔐 Secure Authentication</h3>
+            <p>Role-based access for Admin, Staff, and Users.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+
+    <p>© 2026 Kerala Queue Management System. All Rights Reserved.</p>
+
+</footer>
+
+</body>
+</html>

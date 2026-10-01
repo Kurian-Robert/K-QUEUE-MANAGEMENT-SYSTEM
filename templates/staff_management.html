@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Staff Management - KQMS</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/staff_management.css' %}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+        <h2>KQMS</h2>
+
+        <a href="#">Dashboard</a>
+        <a href="#">Office Management</a>
+        <a href="#">Department Management</a>
+        <a href="#">Service Management</a>
+        <a href="#" class="active">Staff Management</a>
+        <a href="#">Queue Management</a>
+
+        <a href="#" class="logout">Logout</a>
+
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Header -->
+        <div class="header">
+
+            <div>
+                <h1>Staff Management</h1>
+                <p>Manage staff members and their departments.</p>
+            </div>
+
+            <button class="add-btn">
+                + Add Staff
+            </button>
+
+        </div>
+
+
+        <!-- Staff Card -->
+        <div class="card">
+
+            <h2>Staff List</h2>
+
+
+            <!-- Search -->
+            <div class="search">
+
+                <input
+                    type="text"
+                    placeholder="Search staff..."
+                >
+
+                <button>Search</button>
+
+            </div>
+
+
+            <!-- Staff Table -->
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Staff ID</th>
+                        <th>Staff Name</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>1</td>
+                        <td>Arun Kumar</td>
+                        <td>RTO</td>
+                        <td>Staff</td>
+
+                        <td>
+                            <span class="active">
+                                Active
+                            </span>
+                        </td>
+
+                        <td>
+                            <button class="edit">
+                                Edit
+                            </button>
+
+                            <button class="delete">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>2</td>
+                        <td>Rahul Mathew</td>
+                        <td>Revenue</td>
+                        <td>Staff</td>
+
+                        <td>
+                            <span class="active">
+                                Active
+                            </span>
+                        </td>
+
+                        <td>
+                            <button class="edit">
+                                Edit
+                            </button>
+
+                            <button class="delete">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>3</td>
+                        <td>Anu Joseph</td>
+                        <td>Certificate Services</td>
+                        <td>Staff</td>
+
+                        <td>
+                            <span class="inactive">
+                                Inactive
+                            </span>
+                        </td>
+
+                        <td>
+                            <button class="edit">
+                                Edit
+                            </button>
+
+                            <button class="delete">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

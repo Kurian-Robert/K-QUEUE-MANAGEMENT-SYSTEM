@@ -1,0 +1,291 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    width: 230px;
+    height: 100vh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    background: #172554;
+
+    padding: 25px 15px;
+}
+
+.sidebar h2 {
+    color: white;
+
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+
+    color: #dbeafe;
+
+    text-decoration: none;
+
+    padding: 13px 15px;
+
+    margin-bottom: 5px;
+
+    border-radius: 6px;
+}
+
+.sidebar a:hover,
+.sidebar .active {
+    background: #2563eb;
+    color: white;
+}
+
+.sidebar .logout {
+    margin-top: 40px;
+
+    background: #dc2626;
+
+    color: white;
+
+    text-align: center;
+}
+
+
+/* Main Content */
+
+.main-content {
+    margin-left: 230px;
+
+    padding: 30px;
+}
+
+
+/* Header */
+
+.header {
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    color: #172554;
+
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: #64748b;
+}
+
+
+/* Main Card */
+
+.card {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+    color: #172554;
+
+    margin-bottom: 20px;
+}
+
+
+/* Queue Information */
+
+.queue-info {
+    display: flex;
+
+    gap: 20px;
+
+    margin-bottom: 35px;
+}
+
+.queue-info div {
+    flex: 1;
+
+    padding: 20px;
+
+    background: #f8fafc;
+
+    border-radius: 8px;
+
+    text-align: center;
+
+    border: 1px solid #e2e8f0;
+}
+
+.queue-info h3 {
+    color: #64748b;
+
+    font-size: 14px;
+
+    margin-bottom: 10px;
+}
+
+.token {
+    font-size: 30px;
+
+    font-weight: bold;
+
+    color: #2563eb;
+}
+
+.number {
+    font-size: 30px;
+
+    font-weight: bold;
+
+    color: #172554;
+}
+
+
+/* Table Title */
+
+.table-title {
+    margin-top: 10px;
+}
+
+
+/* Table */
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+th {
+    background: #f1f5f9;
+
+    color: #334155;
+
+    padding: 14px;
+
+    text-align: left;
+}
+
+td {
+    padding: 14px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    color: #475569;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+
+/* Status */
+
+.completed {
+    background: #dcfce7;
+
+    color: #166534;
+
+    padding: 5px 10px;
+
+    border-radius: 15px;
+
+    font-size: 12px;
+}
+
+.serving {
+    background: #dbeafe;
+
+    color: #1d4ed8;
+
+    padding: 5px 10px;
+
+    border-radius: 15px;
+
+    font-size: 12px;
+}
+
+.waiting {
+    background: #fef3c7;
+
+    color: #92400e;
+
+    padding: 5px 10px;
+
+    border-radius: 15px;
+
+    font-size: 12px;
+}
+
+
+/* Buttons */
+
+.view,
+.call {
+    border: none;
+
+    color: white;
+
+    padding: 7px 12px;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+}
+
+.view {
+    background: #2563eb;
+}
+
+.call {
+    background: #16a34a;
+}
+
+.view:hover {
+    background: #1d4ed8;
+}
+
+.call:hover {
+    background: #15803d;
+}
+
+
+/* Responsive */
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        width: 180px;
+    }
+
+    .main-content {
+        margin-left: 180px;
+
+        padding: 20px;
+    }
+
+    .queue-info {
+        flex-direction: column;
+    }
+
+    table {
+        min-width: 800px;
+    }
+}

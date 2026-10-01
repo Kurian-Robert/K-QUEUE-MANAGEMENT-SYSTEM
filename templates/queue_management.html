@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Queue Management - KQMS</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/queue_management.css' %}">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+        <h2>KQMS</h2>
+
+        <a href="#">Dashboard</a>
+        <a href="#">Office Management</a>
+        <a href="#">Department Management</a>
+        <a href="#">Service Management</a>
+        <a href="#">Staff Management</a>
+        <a href="#" class="active">Queue Management</a>
+
+        <a href="#" class="logout">Logout</a>
+
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Header -->
+        <div class="header">
+
+            <div>
+                <h1>Queue Management</h1>
+                <p>Monitor and manage the current queue.</p>
+            </div>
+
+        </div>
+
+
+        <!-- Queue Card -->
+        <div class="card">
+
+            <h2>Current Queue</h2>
+
+            <div class="queue-info">
+
+                <div>
+                    <h3>Current Token</h3>
+                    <span class="token">A105</span>
+                </div>
+
+                <div>
+                    <h3>Waiting</h3>
+                    <span class="number">12</span>
+                </div>
+
+                <div>
+                    <h3>Completed</h3>
+                    <span class="number">35</span>
+                </div>
+
+            </div>
+
+
+            <!-- Queue Table -->
+
+            <h2 class="table-title">Queue List</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Customer</th>
+                        <th>Service</th>
+                        <th>Staff</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>A103</td>
+                        <td>Arun Kumar</td>
+                        <td>Driving Licence</td>
+                        <td>Rahul</td>
+                        <td>
+                            <span class="completed">
+                                Completed
+                            </span>
+                        </td>
+                        <td>
+                            <button class="view">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>A104</td>
+                        <td>Anu Joseph</td>
+                        <td>Vehicle Registration</td>
+                        <td>Rahul</td>
+                        <td>
+                            <span class="serving">
+                                Serving
+                            </span>
+                        </td>
+                        <td>
+                            <button class="call">
+                                Call
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>A105</td>
+                        <td>John Mathew</td>
+                        <td>Driving Licence</td>
+                        <td>Rahul</td>
+                        <td>
+                            <span class="waiting">
+                                Waiting
+                            </span>
+                        </td>
+                        <td>
+                            <button class="call">
+                                Call
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>A106</td>
+                        <td>Meera Thomas</td>
+                        <td>Vehicle Registration</td>
+                        <td>-</td>
+                        <td>
+                            <span class="waiting">
+                                Waiting
+                            </span>
+                        </td>
+                        <td>
+                            <button class="call">
+                                Call
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

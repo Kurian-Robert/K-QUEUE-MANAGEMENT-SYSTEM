@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+
+    <link rel="stylesheet" href="{% static 'css/user_register.css' %}">
+</head>
+<body>
+
+<div class="register-container">
+
+    <div class="register-box">
+
+        <h2>User Registration</h2>
+        <p class="subtitle">Kerala Queue Management System</p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter Username" required>
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Enter Email Address" required>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter Password" required>
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone" placeholder="Enter Phone Number" required>
+            </div>
+
+            <div class="input-group">
+                <label>Address</label>
+                <textarea name="address" placeholder="Enter Address" rows="3" required></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Profile Picture</label>
+                <input type="file" name="picture">
+            </div>
+
+            <button type="submit" class="register-btn">
+                Register
+            </button>
+
+        </form>
+
+        <div class="links">
+            <p>Already have an account?</p>
+            <a href="{% url 'user_login' %}">
+                Login Here
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

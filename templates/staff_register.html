@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Registration</title>
+
+    <link rel="stylesheet" href="{% static 'css/staff_register.css' %}">
+
+</head>
+<body>
+
+<div class="register-container">
+
+    <div class="register-box">
+
+        <h2>Staff Registration</h2>
+        <p class="subtitle">Kerala Queue Management System</p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter Username" required>
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Enter Email" required>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter Password" required>
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone" placeholder="Enter Phone Number" required>
+            </div>
+
+            <div class="input-group">
+                <label>Designation</label>
+                <input type="text" name="designation" placeholder="Enter Designation" required>
+            </div>
+
+            <div class="input-group">
+                <label>Department</label>
+
+                <select name="department" required>
+                    <option value="">-- Select Department --</option>
+
+                    {% for department in departments %}
+                    <option value="{{ department.id }}">
+                        {{ department.department_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+            </div>
+
+            <div class="input-group">
+                <label>Profile Picture</label>
+                <input type="file" name="picture">
+            </div>
+
+            <button type="submit" class="register-btn">
+                Register
+            </button>
+
+        </form>
+
+        <div class="links">
+            <p>Already have an account?</p>
+            <a href="{% url 'staff_login' %}">
+                Login
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

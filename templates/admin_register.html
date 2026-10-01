@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Register</title>
+
+    <link rel="stylesheet" href="{% static 'css/admin_register.css' %}">
+
+</head>
+<body>
+
+<div class="register-box">
+
+<h2>Admin Registration</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<input type="text" name="username" placeholder="Username" required>
+
+<input type="email" name="email" placeholder="Email" required>
+
+<input type="password" name="password" placeholder="Password" required>
+
+<input type="text" name="phone" placeholder="Phone Number" required>
+
+<label>Profile Picture</label>
+
+<input type="file" name="picture">
+
+<button type="submit">Register</button>
+
+</form>
+
+<p>
+
+Already Registered?
+
+<a href="{% url 'admin_login' %}">
+
+Login
+
+</a>
+
+</p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+
+    <link rel="stylesheet" href="{% static 'css/staff_dashboard.css' %}">
+
+</head>
+<body>
+
+<div class="sidebar">
+
+    <h2>KQMS</h2>
+
+    <a href="#">🏠 Dashboard</a>
+    <a href="#">📋 Today's Queue</a>
+    <a href="#">📢 Call Next Token</a>
+    <a href="#">✅ Completed Tokens</a>
+    <a href="#">👤 Profile</a>
+    <a href="{% url 'staff_logout' %}">🚪 Logout</a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="header">
+        <h1>Staff Dashboard</h1>
+        <p>Welcome to Kerala Queue Management System</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Today's Tokens</h3>
+            <p>125</p>
+        </div>
+
+        <div class="card">
+            <h3>Current Token</h3>
+            <p>A-023</p>
+        </div>
+
+        <div class="card">
+            <h3>Completed</h3>
+            <p>84</p>
+        </div>
+
+        <div class="card">
+            <h3>Pending</h3>
+            <p>41</p>
+        </div>
+
+    </div>
+
+    <div class="quick-actions">
+
+        <h2>Quick Actions</h2>
+
+        <div class="buttons">
+
+            <button>Call Next Token</button>
+
+            <button>Complete Token</button>
+
+            <button>Skip Token</button>
+
+            <button>View Queue</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

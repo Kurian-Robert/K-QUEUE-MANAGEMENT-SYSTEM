@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Token Status - KQMS</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/token_status.css' %}">
+</head>
+
+<body>
+
+    <!-- Header -->
+
+    <header>
+
+        <h2>KQMS</h2>
+
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Get Token</a>
+            <a href="#" class="active">Token Status</a>
+            <a href="#">Logout</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Main Content -->
+
+    <main>
+
+        <div class="status-card">
+
+            <h1>Token Status</h1>
+
+            <p>Check the current status of your queue token.</p>
+
+
+            <!-- Token Number -->
+
+            <div class="token-box">
+
+                <span>Your Token</span>
+
+                <h2>A105</h2>
+
+            </div>
+
+
+            <!-- Token Details -->
+
+            <div class="details">
+
+                <div>
+                    <span>Office</span>
+                    <strong>RTO Office</strong>
+                </div>
+
+                <div>
+                    <span>Service</span>
+                    <strong>Driving Licence</strong>
+                </div>
+
+                <div>
+                    <span>Current Token</span>
+                    <strong>A104</strong>
+                </div>
+
+                <div>
+                    <span>People Ahead</span>
+                    <strong>1</strong>
+                </div>
+
+            </div>
+
+
+            <!-- Status -->
+
+            <div class="status waiting">
+                Waiting
+            </div>
+
+
+            <button class="refresh-btn">
+                Refresh Status
+            </button>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

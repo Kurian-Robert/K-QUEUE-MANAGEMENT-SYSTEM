@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Get Token - KQMS</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/get_token.css' %}">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <h2>KQMS</h2>
+
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">My Tokens</a>
+            <a href="#">Logout</a>
+        </nav>
+    </header>
+
+
+    <!-- Main Content -->
+    <main>
+
+        <div class="token-card">
+
+            <h1>Get Your Token</h1>
+
+            <p>Select an office and service to get a queue token.</p>
+
+
+            <form>
+
+                <label for="office">Select Office</label>
+
+                <select id="office" name="office">
+                    <option value="">Select Office</option>
+                    <option value="rto">RTO Office</option>
+                    <option value="village">Village Office</option>
+                    <option value="akshaya">Akshaya Centre</option>
+                </select>
+
+
+                <label for="department">Select Department</label>
+
+                <select id="department" name="department">
+                    <option value="">Select Department</option>
+                    <option value="rto">RTO Department</option>
+                    <option value="revenue">Revenue Department</option>
+                    <option value="certificate">Certificate Services</option>
+                </select>
+
+
+                <label for="service">Select Service</label>
+
+                <select id="service" name="service">
+                    <option value="">Select Service</option>
+                    <option value="licence">Driving Licence</option>
+                    <option value="registration">Vehicle Registration</option>
+                    <option value="certificate">Birth Certificate</option>
+                </select>
+
+
+                <button type="submit">
+                    Get Token
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

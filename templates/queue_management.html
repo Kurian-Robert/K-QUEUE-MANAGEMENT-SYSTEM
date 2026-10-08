@@ -1,167 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>Queue Management - KQMS</title>
+{% block title %}Live Public Queue Display - KQMS{% endblock %}
 
-    <link rel="stylesheet"
-          href="{% static 'css/queue_management.css' %}">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/queue_management.css' %}">
+{% endblock %}
 
-<body>
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-    <!-- Sidebar -->
-    <div class="sidebar">
+{% block content %}
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>KQMS Queue</h2>
+    <a href="{% url 'index_page' %}">🏠 Portal Home</a>
+    <a href="{% url 'queue_management' %}" class="active">📋 Live Queue</a>
+    <a href="{% url 'generate_token' %}">🎫 Book Token</a>
+    {% if request.session.admin_id %}
+    <a href="{% url 'admin_dashboard' %}">🛡️ Admin Dashboard</a>
+    <a href="{% url 'admin_logout' %}" class="logout">Logout</a>
+    {% elif request.session.staff_id %}
+    <a href="{% url 'staff_dashboard' %}">👔 Staff Counter</a>
+    <a href="{% url 'staff_logout' %}" class="logout">Logout</a>
+    {% elif request.session.user_id %}
+    <a href="{% url 'user_dashboard' %}">👤 My Dashboard</a>
+    <a href="{% url 'user_logout' %}" class="logout">Logout</a>
+    {% else %}
+    <a href="{% url 'user_login' %}" class="logout">Citizen Login</a>
+    {% endif %}
+</div>
 
-        <h2>KQMS</h2>
+<!-- Main Content -->
+<div class="main-content">
 
-        <a href="#">Dashboard</a>
-        <a href="#">Office Management</a>
-        <a href="#">Department Management</a>
-        <a href="#">Service Management</a>
-        <a href="#">Staff Management</a>
-        <a href="#" class="active">Queue Management</a>
-
-        <a href="#" class="logout">Logout</a>
-
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>Live Queue Board</h1>
+            <p>Real-time queue monitoring and token status across government counters.</p>
+        </div>
+        <div>
+            <button onclick="window.location.reload();" class="view" style="padding: 10px 18px; font-size: 0.9rem;">
+                🔄 Refresh Board
+            </button>
+        </div>
     </div>
 
-
-    <!-- Main Content -->
-    <div class="main-content">
-
-        <!-- Header -->
-        <div class="header">
-
+    <!-- Queue Card -->
+    <div class="card">
+        <h2>Live Counter Overview</h2>
+        <div class="queue-info">
             <div>
-                <h1>Queue Management</h1>
-                <p>Monitor and manage the current queue.</p>
+                <h3>Currently Serving</h3>
+                <span class="token">{{ current_token.token_number|default:"None" }}</span>
             </div>
-
+            <div>
+                <h3>Tokens Waiting</h3>
+                <span class="number">{{ waiting_count }}</span>
+            </div>
+            <div>
+                <h3>Completed Today</h3>
+                <span class="number">{{ completed_count }}</span>
+            </div>
         </div>
 
-
-        <!-- Queue Card -->
-        <div class="card">
-
-            <h2>Current Queue</h2>
-
-            <div class="queue-info">
-
-                <div>
-                    <h3>Current Token</h3>
-                    <span class="token">A105</span>
-                </div>
-
-                <div>
-                    <h3>Waiting</h3>
-                    <span class="number">12</span>
-                </div>
-
-                <div>
-                    <h3>Completed</h3>
-                    <span class="number">35</span>
-                </div>
-
-            </div>
-
-
-            <!-- Queue Table -->
-
-            <h2 class="table-title">Queue List</h2>
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Token</th>
-                        <th>Customer</th>
-                        <th>Service</th>
-                        <th>Staff</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>A103</td>
-                        <td>Arun Kumar</td>
-                        <td>Driving Licence</td>
-                        <td>Rahul</td>
-                        <td>
-                            <span class="completed">
-                                Completed
-                            </span>
-                        </td>
-                        <td>
-                            <button class="view">
-                                View
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>A104</td>
-                        <td>Anu Joseph</td>
-                        <td>Vehicle Registration</td>
-                        <td>Rahul</td>
-                        <td>
-                            <span class="serving">
-                                Serving
-                            </span>
-                        </td>
-                        <td>
-                            <button class="call">
-                                Call
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>A105</td>
-                        <td>John Mathew</td>
-                        <td>Driving Licence</td>
-                        <td>Rahul</td>
-                        <td>
-                            <span class="waiting">
-                                Waiting
-                            </span>
-                        </td>
-                        <td>
-                            <button class="call">
-                                Call
-                            </button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>A106</td>
-                        <td>Meera Thomas</td>
-                        <td>Vehicle Registration</td>
-                        <td>-</td>
-                        <td>
-                            <span class="waiting">
-                                Waiting
-                            </span>
-                        </td>
-                        <td>
-                            <button class="call">
-                                Call
-                            </button>
-                        </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+        <!-- Queue Table -->
+        <h2 class="table-title">Recent Queue Dispatch</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Citizen Name</th>
+                    <th>Service</th>
+                    <th>Attending Staff</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for token in tokens %}
+                <tr>
+                    <td><strong>{{ token.token_number }}</strong></td>
+                    <td>{{ token.citizen.citizen_name }}</td>
+                    <td>{{ token.service.service_name }}</td>
+                    <td>{{ token.staff.staff_name|default:"Unassigned (Waiting)" }}</td>
+                    <td>
+                        <span class="{% if token.status == 'Completed' %}completed{% elif token.status == 'Serving' %}serving{% else %}waiting{% endif %}">
+                            {{ token.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'token_status' token.token_id %}" style="text-decoration:none;">
+                            <button class="view">Track</button>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" style="text-align:center;">No tokens currently in queue.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-</body>
-</html>
+</div>
+{% endblock %}

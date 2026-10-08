@@ -1,31 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Registration</title>
+{% block title %}Staff Registration - KQMS{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/staff_register.css' %}">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_register.css' %}">
+{% endblock %}
 
-</head>
-<body>
-
-<div class="register-container">
-
-    <div class="register-box">
-
+{% block content %}
+<div class="register-container" style="min-height: 75vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
+    <div class="register-box" style="max-width: 480px; width: 100%;">
         <h2>Staff Registration</h2>
         <p class="subtitle">Kerala Queue Management System</p>
 
         <form method="POST" enctype="multipart/form-data">
-
             {% csrf_token %}
-
             <div class="input-group">
                 <label>Username</label>
-                <input type="text" name="username" placeholder="Enter Username" required>
+                <input type="text" name="username" placeholder="Enter Staff Username" required>
             </div>
 
             <div class="input-group">
@@ -45,22 +37,19 @@
 
             <div class="input-group">
                 <label>Designation</label>
-                <input type="text" name="designation" placeholder="Enter Designation" required>
+                <input type="text" name="designation" placeholder="e.g. Counter Officer" required>
             </div>
 
             <div class="input-group">
                 <label>Department</label>
-
                 <select name="department" required>
                     <option value="">-- Select Department --</option>
-
                     {% for department in departments %}
-                    <option value="{{ department.id }}">
+                    <option value="{{ department.department_id }}">
                         {{ department.department_name }}
                     </option>
                     {% endfor %}
                 </select>
-
             </div>
 
             <div class="input-group">
@@ -68,22 +57,13 @@
                 <input type="file" name="picture">
             </div>
 
-            <button type="submit" class="register-btn">
-                Register
-            </button>
-
+            <button type="submit" class="register-btn">Register</button>
         </form>
 
         <div class="links">
             <p>Already have an account?</p>
-            <a href="{% url 'staff_login' %}">
-                Login
-            </a>
+            <a href="{% url 'staff_login' %}">Login</a>
         </div>
-
     </div>
-
 </div>
-
-</body>
-</html>
+{% endblock %}

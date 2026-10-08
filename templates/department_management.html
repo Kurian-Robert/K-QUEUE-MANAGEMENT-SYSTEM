@@ -1,273 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>Department Management - KQMS</title>
+{% block title %}Department Management - KQMS{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/department_management.css' %}">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/department_management.css' %}">
+{% endblock %}
 
-<body>
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
+{% block content %}
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="logo">
+        <h2>KQMS</h2>
+        <p>Admin Panel</p>
+    </div>
 
-        <div class="logo">
-            <h2>KQMS</h2>
-            <p>Admin Panel</p>
+    <nav>
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'office_management' %}">Offices</a>
+        <a href="{% url 'department_management' %}" class="active">Departments</a>
+        <a href="{% url 'service_management' %}">Services</a>
+        <a href="{% url 'staff_management' %}">Staff Management</a>
+        <a href="{% url 'user_management' %}">Manage Users</a>
+        <a href="{% url 'queue_management' %}">Queue Management</a>
+        <a href="{% url 'adbms_dashboard' %}">ADBMS Reports</a>
+    </nav>
+
+    <a href="{% url 'admin_logout' %}" class="logout">Logout</a>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Header -->
+    <header class="topbar">
+        <div>
+            <h1>Department Management</h1>
+            <p>Manage government departments and service assignments.</p>
+        </div>
+        <div class="admin-profile">
+            <div class="profile-icon">A</div>
+            <span>Admin</span>
+        </div>
+    </header>
+
+    <!-- Statistics -->
+    <section class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div>
+                <h3>{{ departments|length }}</h3>
+                <p>Total Departments</p>
+            </div>
         </div>
 
-        <nav>
-            <a href="#">Dashboard</a>
-            <a href="#">Office Management</a>
-            <a href="#" class="active">Department Management</a>
-            <a href="#">Staff Management</a>
-            <a href="#">Queue Management</a>
-            <a href="#">Reports</a>
-            <a href="#">Settings</a>
-        </nav>
-
-        <a href="#" class="logout">Logout</a>
-
-    </aside>
-
-
-    <!-- Main Content -->
-    <main class="main-content">
-
-        <!-- Header -->
-        <header class="topbar">
-
+        <div class="stat-card">
+            <div class="stat-icon">✓</div>
             <div>
-                <h1>Department Management</h1>
-                <p>Manage departments and services available in KQMS.</p>
+                <h3>{{ departments|length }}</h3>
+                <p>Active Departments</p>
             </div>
+        </div>
 
-            <div class="admin-profile">
-                <div class="profile-icon">A</div>
-                <span>Admin</span>
+        <div class="stat-card">
+            <div class="stat-icon">🏛️</div>
+            <div>
+                <h3>Statewide</h3>
+                <p>Coverage</p>
             </div>
+        </div>
+    </section>
 
-        </header>
-
-
-        <!-- Statistics -->
-        <section class="stats-container">
-
-            <div class="stat-card">
-                <div class="stat-icon">🏢</div>
-
-                <div>
-                    <h3>18</h3>
-                    <p>Total Departments</p>
-                </div>
+    <!-- Department Management -->
+    <section class="management-section">
+        <div class="section-header">
+            <div>
+                <h2>Department Directory</h2>
+                <p>View registered departments across state offices.</p>
             </div>
-
-
-            <div class="stat-card">
-                <div class="stat-icon">✓</div>
-
-                <div>
-                    <h3>16</h3>
-                    <p>Active Departments</p>
-                </div>
-            </div>
-
-
-            <div class="stat-card">
-                <div class="stat-icon">👥</div>
-
-                <div>
-                    <h3>42</h3>
-                    <p>Total Staff</p>
-                </div>
-            </div>
-
-        </section>
-
-
-        <!-- Department Management -->
-        <section class="management-section">
-
-            <div class="section-header">
-
-                <div>
-                    <h2>Department List</h2>
-                    <p>View and manage registered departments.</p>
-                </div>
-
-                <a href="#" class="add-btn">+ Add Department</a>
-
-            </div>
-
-
-            <!-- Search and Filter -->
-            <div class="search-area">
-
-                <input
-                    type="text"
-                    placeholder="Search department..."
-                    id="departmentSearch"
-                >
-
-                <select>
-                    <option value="">All Offices</option>
-                    <option>RTO Thiruvananthapuram</option>
-                    <option>Akshaya Centre</option>
-                    <option>Village Office</option>
-                </select>
-
-                <button class="search-btn">Search</button>
-
-            </div>
-
-
-            <!-- Department Table -->
-            <div class="table-container">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Department ID</th>
-                            <th>Department Name</th>
-                            <th>Office</th>
-                            <th>Service</th>
-                            <th>Staff Count</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-
-                    <tbody>
-
-                        <tr>
-
-                            <td>DEP001</td>
-
-                            <td>
-                                <strong>Driving Licence</strong>
-                            </td>
-
-                            <td>RTO Thiruvananthapuram</td>
-
-                            <td>Licence Services</td>
-
-                            <td>8</td>
-
-                            <td>
-                                <span class="status active-status">
-                                    Active
-                                </span>
-                            </td>
-
-                            <td>
-                                <a href="#" class="view-btn">View</a>
-                                <a href="#" class="edit-btn">Edit</a>
-                                <a href="#" class="delete-btn">Delete</a>
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>DEP002</td>
-
-                            <td>
-                                <strong>Vehicle Registration</strong>
-                            </td>
-
-                            <td>RTO Thiruvananthapuram</td>
-
-                            <td>Vehicle Services</td>
-
-                            <td>12</td>
-
-                            <td>
-                                <span class="status active-status">
-                                    Active
-                                </span>
-                            </td>
-
-                            <td>
-                                <a href="#" class="view-btn">View</a>
-                                <a href="#" class="edit-btn">Edit</a>
-                                <a href="#" class="delete-btn">Delete</a>
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>DEP003</td>
-
-                            <td>
-                                <strong>Certificate Services</strong>
-                            </td>
-
-                            <td>Village Office</td>
-
-                            <td>Certificate</td>
-
-                            <td>7</td>
-
-                            <td>
-                                <span class="status active-status">
-                                    Active
-                                </span>
-                            </td>
-
-                            <td>
-                                <a href="#" class="view-btn">View</a>
-                                <a href="#" class="edit-btn">Edit</a>
-                                <a href="#" class="delete-btn">Delete</a>
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>DEP004</td>
-
-                            <td>
-                                <strong>Public Service</strong>
-                            </td>
-
-                            <td>Akshaya Centre</td>
-
-                            <td>Citizen Services</td>
-
-                            <td>5</td>
-
-                            <td>
-                                <span class="status inactive-status">
-                                    Inactive
-                                </span>
-                            </td>
-
-                            <td>
-                                <a href="#" class="view-btn">View</a>
-                                <a href="#" class="edit-btn">Edit</a>
-                                <a href="#" class="delete-btn">Delete</a>
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</body>
-</html>
+        </div>
+
+        <!-- Department Table -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Department ID</th>
+                        <th>Department Name</th>
+                        <th>Parent Office</th>
+                        <th>Services Offered</th>
+                        <th>Staff Count</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dept in departments %}
+                    <tr>
+                        <td><strong>DEP-{{ dept.department_id }}</strong></td>
+                        <td><strong>{{ dept.department_name }}</strong></td>
+                        <td>{{ dept.office.office_name|default:"General State Office" }}</td>
+                        <td>{{ dept.service_set.count }} Services</td>
+                        <td>{{ dept.staff_set.count }} Staff</td>
+                        <td>
+                            <span class="status active-status">Active</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" style="text-align:center;">No departments found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+{% endblock %}

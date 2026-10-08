@@ -1,0 +1,522 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}KQMS - ADBMS Academic Coursework Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/adbms_dashboard.css' %}">
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+
+    <!-- Sidebar -->
+    <aside class="adbms-sidebar">
+        <div class="brand">
+            <h2>KQMS ADBMS</h2>
+            <p>Advanced Database Management Project</p>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#" class="active" onclick="switchTab('phase1')">Phase 1: ER & 3NF</a></li>
+            <li><a href="#" onclick="switchTab('phase2')">Phase 2: DDL, DML & Clean</a></li>
+            <li><a href="#" onclick="switchTab('phase3_queries')">Phase 3: Joins & Subqueries</a></li>
+            <li><a href="#" onclick="switchTab('phase3_routines')">Phase 3: Views & Procedures</a></li>
+            <li><a href="#" onclick="switchTab('phase4')">Phase 4: ACID Transactions</a></li>
+        </ul>
+
+        <div style="margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 15px;">
+            <p style="font-size: 0.72rem; color: #94a3b8; margin-bottom: 6px;">CORE APP SHORTCUTS</p>
+            <ul class="nav-links" style="margin-top: 0;">
+                <li><a href="/management/">Queue Management</a></li>
+                <li><a href="/get-token/">Get Token</a></li>
+                <li><a href="/system_admin/dashboard/">Admin Portal</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-footer">
+            <p><strong>DB:</strong> MySQL 8.0</p>
+            <p><strong>Database Name:</strong> kqms</p>
+            <p><strong>Student:</strong> MCA ADBMS Lab</p>
+        </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="adbms-main">
+        <div class="top-bar">
+            <div>
+                <h1>Kerala Queue Management System (KQMS)</h1>
+                <span class="badge-tag">ADBMS Coursework Demonstration Suite</span>
+            </div>
+            <div>
+                <span style="font-size: 0.8rem; color: #64748b;">Connected to MySQL (kqms)</span>
+            </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Tokens</div>
+                <div class="value">{{ token_stats.total }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Tokens Completed</div>
+                <div class="value" style="color: #10b981;">{{ token_stats.completed }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Currently Serving</div>
+                <div class="value" style="color: #f59e0b;">{{ token_stats.serving }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">In Waiting Queue</div>
+                <div class="value" style="color: #3b82f6;">{{ token_stats.waiting }}</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('phase1')">Phase 1: ER & 3NF Design</button>
+            <button class="tab-btn" onclick="switchTab('phase2')">Phase 2: DDL, DML & Data Hygiene</button>
+            <button class="tab-btn" onclick="switchTab('phase3_queries')">Phase 3: Joins & Subqueries</button>
+            <button class="tab-btn" onclick="switchTab('phase3_routines')">Phase 3: Views & Stored Routines</button>
+            <button class="tab-btn" onclick="switchTab('phase4')">Phase 4: Transactions & Rollback</button>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 1: PHASE 1 ER MODEL & 3NF NORMALIZATION                    -->
+        <!-- ============================================================== -->
+        <div id="phase1" class="tab-pane active">
+            <div class="card-box">
+                <h3>Relational Schema & 3NF Normalization Proof</h3>
+                <p>The KQMS database schema contains 8 normalized relational entities with rigorous integrity constraints, eliminating data anomalies while preserving dependencies.</p>
+
+                <div class="er-grid">
+                    <!-- Office -->
+                    <div class="er-card">
+                        <div class="er-header">office <span>Table</span></div>
+                        <div class="er-body">
+                            <div class="er-field"><span class="er-pk">PK office_id</span> <span>INT (Auto)</span></div>
+                            <div class="er-field"><span>office_name</span> <span>VARCHAR(80)</span></div>
+                            <div class="er-field"><span>office_type</span> <span>VARCHAR(40)</span></div>
+                            <div class="er-field"><span>district</span> <span>VARCHAR(40)</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Department -->
+                    <div class="er-card">
+                        <div class="er-header">department <span>Table</span></div>
+                        <div class="er-body">
+                            <div class="er-field"><span class="er-pk">PK department_id</span> <span>INT (Auto)</span></div>
+                            <div class="er-field"><span>department_name</span> <span>VARCHAR(100)</span></div>
+                            <div class="er-field"><span class="er-fk">FK office_id</span> <span>CASCADE</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Service -->
+                    <div class="er-card">
+                        <div class="er-header">service <span>Table</span></div>
+                        <div class="er-body">
+                            <div class="er-field"><span class="er-pk">PK service_id</span> <span>INT (Auto)</span></div>
+                            <div class="er-field"><span>service_name</span> <span>VARCHAR(60)</span></div>
+                            <div class="er-field"><span>avg_service_min</span> <span>CHECK (> 0)</span></div>
+                            <div class="er-field"><span class="er-fk">FK department_id</span> <span>CASCADE</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Staff -->
+                    <div class="er-card">
+                        <div class="er-header">staff <span>Table</span></div>
+                        <div class="er-body">
+                            <div class="er-field"><span class="er-pk">PK staff_id</span> <span>INT (Auto)</span></div>
+                            <div class="er-field"><span>staff_name</span> <span>VARCHAR(60)</span></div>
+                            <div class="er-field"><span>role</span> <span>VARCHAR(30)</span></div>
+                            <div class="er-field"><span class="er-fk">FK department_id</span> <span>CASCADE</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Citizen -->
+                    <div class="er-card">
+                        <div class="er-header">citizen <span>Table</span></div>
+                        <div class="er-body">
+                            <div class="er-field"><span class="er-pk">PK citizen_id</span> <span>INT (Auto)</span></div>
+                            <div class="er-field"><span>citizen_name</span> <span>VARCHAR(60)</span></div>
+                            <div class="er-field"><span>phone</span> <span>VARCHAR(15)</span></div>
+                            <div class="er-field"><span>email</span> <span>UNIQUE</span></div>
+                        </div>
+                    </div>
+
+                    <!-- QueueToken -->
+                    <div class="er-card">
+                        <div class="er-header">queue_token <span>Table</span></div>
+                        <div class="er-body">
+                            <div class="er-field"><span class="er-pk">PK token_id</span> <span>INT (Auto)</span></div>
+                            <div class="er-field"><span>token_number</span> <span>VARCHAR(20)</span></div>
+                            <div class="er-field"><span>status</span> <span>CHECK (Status)</span></div>
+                            <div class="er-field"><span class="er-fk">FK citizen_id</span> <span>CASCADE</span></div>
+                            <div class="er-field"><span class="er-fk">FK service_id</span> <span>CASCADE</span></div>
+                            <div class="er-field"><span class="er-fk">FK staff_id</span> <span>SET NULL</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Feedback -->
+                    <div class="er-card">
+                        <div class="er-header">feedback <span>Table</span></div>
+                        <div class="er-body">
+                            <div class="er-field"><span class="er-pk">PK feedback_id</span> <span>INT (Auto)</span></div>
+                            <div class="er-field"><span class="er-fk">FK token_id</span> <span>UNIQUE</span></div>
+                            <div class="er-field"><span class="er-fk">FK citizen_id</span> <span>CASCADE</span></div>
+                            <div class="er-field"><span>rating</span> <span>CHECK (1-5)</span></div>
+                            <div class="er-field"><span>comments</span> <span>TEXT</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Admin -->
+                    <div class="er-card">
+                        <div class="er-header">admin <span>Table</span></div>
+                        <div class="er-body">
+                            <div class="er-field"><span class="er-pk">PK id</span> <span>INT (Auto)</span></div>
+                            <div class="er-field"><span>username</span> <span>UNIQUE</span></div>
+                            <div class="er-field"><span>email</span> <span>VARCHAR(50)</span></div>
+                            <div class="er-field"><span>password</span> <span>HASHED</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px; padding: 16px; background: #f8fafc; border-left: 4px solid var(--primary); border-radius: 4px;">
+                    <h4 style="color: var(--primary-dark); margin-bottom: 6px;">Academic Normalization Proof Summary</h4>
+                    <ul style="font-size: 0.85rem; color: #475569; line-height: 1.6; margin-left: 20px;">
+                        <li><strong>1NF:</strong> Every attribute contains only atomic, single-valued items; unique primary keys exist on all relations.</li>
+                        <li><strong>2NF:</strong> Schema satisfies 1NF, and all non-key attributes are fully functionally dependent on the entire primary key (since single-column surrogate keys are used, partial dependency is strictly impossible).</li>
+                        <li><strong>3NF:</strong> Schema satisfies 2NF and contains no transitive functional dependencies ($X \to Y$ and $Y \to Z$). Token attributes reference Service directly rather than transitively replicating Department or District data. Feedback is isolated into its own entity.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 2: PHASE 2 DATA CREATION, DDL, DML & DATA HYGIENE          -->
+        <!-- ============================================================== -->
+        <div id="phase2" class="tab-pane">
+            <div class="card-box">
+                <h3>Data Preparation, DDL Constraints & Cleaning</h3>
+                <p>Real-time data preparation queries handling null values, applying string standardizations, and computing summary aggregates.</p>
+
+                <div class="query-btn-group">
+                    <button class="btn-query active" onclick="loadQuery('aggregate_having', this)">Department Aggregates (HAVING)</button>
+                    <button class="btn-query" onclick="loadQuery('explain_plan', this)">EXPLAIN Query Cost Plan</button>
+                </div>
+
+                <div id="p2-sql-box" class="sql-display-box">-- Click any button above to inspect and execute raw MySQL queries...</div>
+
+                <div class="data-table-container">
+                    <table class="data-table" id="p2-results-table">
+                        <thead id="p2-table-head">
+                            <tr><th>Status</th></tr>
+                        </thead>
+                        <tbody id="p2-table-body">
+                            <tr><td style="color: #64748b;">Loading initial data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 3: PHASE 3 JOINS & NESTED SUBQUERIES                       -->
+        <!-- ============================================================== -->
+        <div id="phase3_queries" class="tab-pane">
+            <div class="card-box">
+                <h3>Advanced Joins & Nested Subqueries (Raw MySQL)</h3>
+                <p>Demonstrates multi-table INNER/LEFT joins, scalar subqueries in WHERE clauses, correlated subqueries, and subqueries with NOT EXISTS.</p>
+
+                <div class="query-btn-group">
+                    <button class="btn-query active" onclick="loadQuery('join', this)">6-Table Comprehensive JOIN</button>
+                    <button class="btn-query" onclick="loadQuery('subquery_where', this)">Subquery in WHERE (Above Mean)</button>
+                    <button class="btn-query" onclick="loadQuery('correlated_subquery', this)">Correlated Subquery (Latest Token)</button>
+                    <button class="btn-query" onclick="loadQuery('subquery_not_exists', this)">Subquery with NOT EXISTS (Pending Feedback)</button>
+                </div>
+
+                <div id="sql-box" class="sql-display-box">-- Select a query above to view the raw SQL statement and execution output...</div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span id="query-meta" style="font-size: 0.8rem; color: #64748b;">Rows: 0 | Execution Time: 0 ms</span>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table" id="results-table">
+                        <thead id="table-head">
+                            <tr><th>Column</th></tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr><td style="color: #64748b;">Click a query button above to execute...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 4: PHASE 3 VIEWS & STORED ROUTINES                         -->
+        <!-- ============================================================== -->
+        <div id="phase3_routines" class="tab-pane">
+            <!-- SQL Views Showcase -->
+            <div class="card-box">
+                <h3>Pre-Compiled SQL Views</h3>
+                <p>Database views simplify analytical reporting and maintain security boundaries.</p>
+
+                <h4 style="margin: 14px 0 8px 0; color: var(--primary-dark); font-size: 0.95rem;">View: vw_department_daily_performance</h4>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Dept ID</th>
+                                <th>Department Name</th>
+                                <th>Office</th>
+                                <th>Total Tokens</th>
+                                <th>Completed</th>
+                                <th>Serving</th>
+                                <th>Waiting</th>
+                                <th>Avg Standard Min</th>
+                                <th>Satisfaction Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in dept_performance %}
+                            <tr>
+                                <td>{{ row.department_id }}</td>
+                                <td><strong>{{ row.department_name }}</strong></td>
+                                <td>{{ row.office_name }}</td>
+                                <td>{{ row.total_tokens }}</td>
+                                <td><span style="color:#10b981; font-weight:600;">{{ row.completed_tokens }}</span></td>
+                                <td><span style="color:#f59e0b; font-weight:600;">{{ row.serving_tokens }}</span></td>
+                                <td><span style="color:#3b82f6; font-weight:600;">{{ row.waiting_tokens }}</span></td>
+                                <td>{{ row.expected_avg_service_time }} min</td>
+                                <td>⭐ {{ row.customer_satisfaction_score|default:"N/A" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="9" style="text-align:center;">No records available.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Stored Function & Stored Procedure Testers -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- Stored Function -->
+                <div class="card-box">
+                    <h3>Stored Function Invocation</h3>
+                    <p><code>fn_calculate_estimated_wait_time(service_id)</code> computes wait time based on waiting queue count * average duration.</p>
+                    
+                    <div class="routine-tester">
+                        <select id="sel-service" class="routine-select">
+                            {% for s in service_list %}
+                            <option value="{{ s.service_id }}">{{ s.service_name }} (Std: {{ s.avg_service_min }} min)</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn-query active" onclick="callWaitTimeFunction()">Run Function</button>
+                    </div>
+
+                    <div id="func-result" class="routine-result" style="display:none;"></div>
+                </div>
+
+                <!-- Stored Procedure -->
+                <div class="card-box">
+                    <h3>Stored Procedure Invocation</h3>
+                    <p><code>sp_call_next_token(IN staff_id, OUT token_id, OUT token_number)</code> executes row-level locking (<code>FOR UPDATE</code>) to assign the next waiting token.</p>
+                    
+                    <div class="routine-tester">
+                        <select id="sel-staff" class="routine-select">
+                            {% for st in staff_list %}
+                            <option value="{{ st.staff_id }}">{{ st.staff_name }} ({{ st.role }})</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn-query active" onclick="callNextTokenProcedure()">Call Next Token</button>
+                    </div>
+
+                    <div id="proc-result" class="routine-result" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- TAB 5: PHASE 4 TRANSACTIONS & ROLLBACK DEMONSTRATION           -->
+        <!-- ============================================================== -->
+        <div id="phase4" class="tab-pane">
+            <div class="card-box">
+                <h3>ACID Integrity & Transaction Handling</h3>
+                <p>Demonstrates database atomicity, savepoints, and automatic rollback upon constraint violation.</p>
+
+                <div class="txn-btn-group">
+                    <button class="btn-txn btn-txn-success" onclick="runTransaction('commit')">
+                        Scenario A: Execute Valid Transaction (COMMIT)
+                    </button>
+                    <button class="btn-txn btn-txn-rollback" onclick="runTransaction('rollback')">
+                        Scenario B: Simulate Failure & Automatic ROLLBACK
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 8px;">
+                    <span style="font-size: 0.82rem; font-weight: 600; color: #475569;">Live Transaction Execution Logs:</span>
+                </div>
+
+                <div id="txn-console" class="txn-log-console">
+                    <div class="log-step">Click either button above to trigger an atomic multi-table transaction in MySQL...</div>
+                    <div class="log-step" style="color: #64748b;">Scenario A performs: UPDATE queue_token -> INSERT feedback (Rating 5) -> COMMIT.</div>
+                    <div class="log-step" style="color: #64748b;">Scenario B performs: UPDATE queue_token -> INSERT feedback (Rating 99 [Violates CHECK constraint]) -> Intercepted -> ROLLBACK.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Interactive JavaScript Engine -->
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+
+            const targetPane = document.getElementById(tabId);
+            if (targetPane) targetPane.classList.add('active');
+
+            // Set active states
+            event.target.classList.add('active');
+
+            if (tabId === 'phase3_queries') {
+                loadQuery('join');
+            } else if (tabId === 'phase2') {
+                loadQuery('aggregate_having', null, 'p2');
+            }
+        }
+
+        function loadQuery(queryType, btnElem = null, prefix = '') {
+            if (btnElem) {
+                const group = btnElem.parentElement;
+                group.querySelectorAll('.btn-query').forEach(b => b.classList.remove('active'));
+                btnElem.classList.add('active');
+            }
+
+            const sqlBox = document.getElementById(prefix ? `${prefix}-sql-box` : 'sql-box');
+            const thead = document.getElementById(prefix ? `${prefix}-table-head` : 'table-head');
+            const tbody = document.getElementById(prefix ? `${prefix}-table-body` : 'table-body');
+            const meta = document.getElementById('query-meta');
+
+            fetch(`/adbms/api/run-query/?type=${queryType}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (sqlBox) sqlBox.textContent = data.sql;
+                    if (meta && !prefix) meta.textContent = `Rows: ${data.row_count} | Query Execution Time: ${data.execution_time_ms} ms`;
+
+                    // Populate Headers
+                    let headHtml = '<tr>';
+                    data.columns.forEach(col => {
+                        headHtml += `<th>${col}</th>`;
+                    });
+                    headHtml += '</tr>';
+                    thead.innerHTML = headHtml;
+
+                    // Populate Rows
+                    let bodyHtml = '';
+                    if (data.rows.length === 0) {
+                        bodyHtml = `<tr><td colspan="${data.columns.length}" style="text-align:center; color:#94a3b8;">No records returned.</td></tr>`;
+                    } else {
+                        data.rows.forEach(row => {
+                            bodyHtml += '<tr>';
+                            row.forEach(val => {
+                                bodyHtml += `<td>${val !== null ? val : '<span style="color:#94a3b8;">NULL</span>'}</td>`;
+                            });
+                            bodyHtml += '</tr>';
+                        });
+                    }
+                    tbody.innerHTML = bodyHtml;
+                })
+                .catch(err => {
+                    if (tbody) tbody.innerHTML = `<tr><td style="color:red;">Error executing query: ${err}</td></tr>`;
+                });
+        }
+
+        function callWaitTimeFunction() {
+            const serviceId = document.getElementById('sel-service').value;
+            const resDiv = document.getElementById('func-result');
+            resDiv.style.display = 'block';
+            resDiv.innerHTML = 'Computing wait time via MySQL stored function...';
+
+            fetch(`/adbms/api/calc-wait-time/?service_id=${serviceId}`)
+                .then(res => res.json())
+                .then(data => {
+                    resDiv.innerHTML = `
+                        <strong>✓ Function Executed:</strong> <code>${data.sql_invoked}</code><br>
+                        <strong>Service:</strong> ${data.service_name}<br>
+                        <strong>Standard Duration:</strong> ${data.avg_service_min} min | 
+                        <strong>Waiting in Queue:</strong> ${data.waiting_tokens} tokens<br>
+                        <strong style="font-size:1.05rem; color:#047857;">➔ Total Estimated Wait Time: ${data.estimated_wait_minutes} Minutes</strong>
+                    `;
+                })
+                .catch(err => {
+                    resDiv.innerHTML = `<span style="color:red;">Error: ${err}</span>`;
+                });
+        }
+
+        function callNextTokenProcedure() {
+            const staffId = document.getElementById('sel-staff').value;
+            const resDiv = document.getElementById('proc-result');
+            resDiv.style.display = 'block';
+            resDiv.innerHTML = 'Executing sp_call_next_token with row-level lock...';
+
+            fetch(`/adbms/api/call-next-sp/?staff_id=${staffId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.assigned_token_id) {
+                        resDiv.style.background = '#f0fdf4';
+                        resDiv.style.color = '#166534';
+                        resDiv.innerHTML = `
+                            <strong>✓ Stored Procedure Succeeded!</strong><br>
+                            <strong>Staff:</strong> ${data.staff_name} (${data.staff_role})<br>
+                            <strong>OUT Parameter (Token ID):</strong> ${data.assigned_token_id}<br>
+                            <strong style="font-size:1.05rem; color:#047857;">➔ Assigned Token: ${data.assigned_token_number}</strong> (Status transitioned to 'Serving')
+                        `;
+                    } else {
+                        resDiv.style.background = '#fffbeb';
+                        resDiv.style.color = '#b45309';
+                        resDiv.innerHTML = `
+                            <strong>Notice:</strong> ${data.status_message}<br>
+                            <strong>Staff:</strong> ${data.staff_name}<br>
+                            <strong>OUT Parameter:</strong> ${data.assigned_token_number}
+                        `;
+                    }
+                })
+                .catch(err => {
+                    resDiv.innerHTML = `<span style="color:red;">Error: ${err}</span>`;
+                });
+        }
+
+        function runTransaction(mode) {
+            const consoleBox = document.getElementById('txn-console');
+            consoleBox.innerHTML = '<div class="log-step">Executing transaction in MySQL...</div>';
+
+            fetch(`/adbms/api/transaction-demo/?mode=${mode}`)
+                .then(res => res.json())
+                .then(data => {
+                    let logHtml = '';
+                    data.logs.forEach(msg => {
+                        let cls = 'log-step';
+                        if (msg.includes('EXCEPTION') || msg.includes('ROLLBACK')) cls += ' log-error';
+                        else if (msg.includes('COMMITTING') || msg.includes('SUCCESS PATH')) cls += ' log-success';
+                        else if (msg.includes('VERIFICATION') || msg.includes('FINAL STATE')) cls += ' log-verify';
+                        logHtml += `<div class="${cls}">${msg}</div>`;
+                    });
+                    consoleBox.innerHTML = logHtml;
+                })
+                .catch(err => {
+                    consoleBox.innerHTML = `<div class="log-step log-error">AJAX Error: ${err}</div>`;
+                });
+        }
+
+        // Initialize default view
+        window.addEventListener('DOMContentLoaded', () => {
+            loadQuery('join');
+        });
+    </script>
+{% endblock %}

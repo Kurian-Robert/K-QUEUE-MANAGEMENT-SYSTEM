@@ -1,54 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Register</title>
+{% block title %}Admin Registration - KQMS{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/admin_register.css' %}">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_register.css' %}?v=2">
+{% endblock %}
 
-</head>
-<body>
-
-<div class="register-box">
-
-<h2>Admin Registration</h2>
-
-<form method="POST" enctype="multipart/form-data">
-
-{% csrf_token %}
-
-<input type="text" name="username" placeholder="Username" required>
-
-<input type="email" name="email" placeholder="Email" required>
-
-<input type="password" name="password" placeholder="Password" required>
-
-<input type="text" name="phone" placeholder="Phone Number" required>
-
-<label>Profile Picture</label>
-
-<input type="file" name="picture">
-
-<button type="submit">Register</button>
-
-</form>
-
-<p>
-
-Already Registered?
-
-<a href="{% url 'admin_login' %}">
-
-Login
-
-</a>
-
-</p>
-
+{% block content %}
+<div style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
+    <div class="register-box">
+        <h2>Admin Registration</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="text" name="phone" placeholder="Phone Number" required>
+            <label style="display:block; text-align:left; margin-top:10px; font-size:0.85rem; color:#64748b;">Profile Picture (Optional)</label>
+            <input type="file" name="picture">
+            <button type="submit" style="margin-top:15px;">Register</button>
+        </form>
+        <p>
+            Already Registered? <a href="{% url 'admin_login' %}">Login</a>
+        </p>
+    </div>
 </div>
-
-</body>
-</html>
+{% endblock %}

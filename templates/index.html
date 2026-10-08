@@ -1,106 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KQMS - Kerala Queue Management System</title>
+{% block title %}KQMS - Kerala Queue Management System{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
-
-</head>
-<body>
-
-<nav class="navbar">
-    <div class="logo">
-        <h2>KQMS</h2>
-    </div>
-
-    <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Departments</a></li>
-        <li><a href="#">Contact</a></li>
-    </ul>
-</nav>
-
+{% block content %}
+<!-- Hero Section -->
 <section class="hero">
-
     <h1>Kerala Queue Management System</h1>
-
     <p>
         A smart digital platform for managing queues efficiently in
         government offices with secure online token booking.
     </p>
-
-    <a href="#roles" class="btn">Get Started</a>
-
+    <div class="hero-actions">
+        <a href="{% url 'generate_token' %}" class="btn btn-primary">🎫 Book Token</a>
+        <a href="#roles" class="btn btn-secondary">Get Started</a>
+    </div>
 </section>
 
+<!-- Login As (Roles) Section -->
 <section class="roles" id="roles">
-
     <h2>Login As</h2>
+    <p class="section-desc">Select your portal to access queue management and citizen services.</p>
 
     <div class="card-container">
-
-        <div class="card">
+        <!-- 1. Administrator Card -->
+        <div class="card card-admin">
+            <div class="card-icon">🛡️</div>
             <h3>Administrator</h3>
-            <p>Manage departments, staff and services.</p>
-            <a href="{% url 'admin_login' %}">Admin Login</a>
+            <p>Manage departments, staff, public services, and database reporting.</p>
+            <a href="{% url 'admin_login' %}" class="card-btn btn-admin">Admin Login &rarr;</a>
         </div>
 
-        <div class="card">
-            <h3>Staff</h3>
-            <p>Manage queues and serve citizens efficiently.</p>
-            <a href="{% url 'staff_login' %}">Staff Login</a>
+        <!-- 2. Staff Card -->
+        <div class="card card-staff">
+            <div class="card-icon">👔</div>
+            <h3>Staff Officer</h3>
+            <p>Manage counter queues, call waiting tokens, and serve citizens efficiently.</p>
+            <a href="{% url 'staff_login' %}" class="card-btn btn-staff">Staff Login &rarr;</a>
         </div>
 
-        <div class="card">
-            <h3>User</h3>
-            <p>Book tokens and track your queue status.</p>
-            <a href="{% url 'user_login' %}">User Login</a>
+        <!-- 3. Citizen Card -->
+        <div class="card card-user">
+            <div class="card-icon">👤</div>
+            <h3>Citizen / User</h3>
+            <p>Generate digital queue tokens and track live waiting status in real time.</p>
+            <a href="{% url 'user_login' %}" class="card-btn btn-user">Citizen Login &rarr;</a>
         </div>
-
     </div>
-
 </section>
 
+<!-- Key Features Section -->
 <section class="features">
-
     <h2>Key Features</h2>
+    <p class="section-desc">Streamlining public administration with modern digital workflows.</p>
 
     <div class="feature-box">
-
         <div class="feature">
-            <h3>🎫 Online Token Booking</h3>
-            <p>Book your queue token anytime.</p>
+            <div class="feature-icon">🎫</div>
+            <h3>Online Token Booking</h3>
+            <p>Generate your digital queue token in seconds without standing in physical lines.</p>
         </div>
 
         <div class="feature">
-            <h3>📊 Live Queue Status</h3>
-            <p>Track your position in real time.</p>
+            <div class="feature-icon">📊</div>
+            <h3>Live Queue Status</h3>
+            <p>Track your real-time waiting position and estimated duration from anywhere.</p>
         </div>
 
         <div class="feature">
-            <h3>🏢 Department Management</h3>
-            <p>Organized services across departments.</p>
+            <div class="feature-icon">🏢</div>
+            <h3>Department Management</h3>
+            <p>Organized routing and multi-counter dispatch across Kerala district offices.</p>
         </div>
 
         <div class="feature">
-            <h3>🔐 Secure Authentication</h3>
-            <p>Role-based access for Admin, Staff, and Users.</p>
+            <div class="feature-icon">🔐</div>
+            <h3>Secure Authentication</h3>
+            <p>Role-based access controls for Citizens, Counter Staff, and Administrators.</p>
         </div>
-
     </div>
-
 </section>
-
-<footer>
-
-    <p>© 2026 Kerala Queue Management System. All Rights Reserved.</p>
-
-</footer>
-
-</body>
-</html>
+{% endblock %}

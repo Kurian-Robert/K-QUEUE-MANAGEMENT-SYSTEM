@@ -1,80 +1,191 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Dashboard</title>
+{% block title %}Staff Counter Operations - KQMS{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/staff_dashboard.css' %}">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_dashboard.css' %}?v=2">
+{% endblock %}
 
-</head>
-<body>
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
+{% block content %}
+<!-- Sidebar Navigation -->
 <div class="sidebar">
+    <h2>KQMS Staff</h2>
 
-    <h2>KQMS</h2>
-
-    <a href="#">🏠 Dashboard</a>
-    <a href="#">📋 Today's Queue</a>
-    <a href="#">📢 Call Next Token</a>
-    <a href="#">✅ Completed Tokens</a>
-    <a href="#">👤 Profile</a>
-    <a href="{% url 'staff_logout' %}">🚪 Logout</a>
-
+    <a href="{% url 'staff_dashboard' %}" class="active">🏠 Counter Dashboard</a>
+    <a href="{% url 'queue_management' %}">📋 Public Queue Board</a>
+    <a href="{% url 'staff_logout' %}" class="logout">🚪 Logout</a>
 </div>
 
+<!-- Main Content Area -->
 <div class="main-content">
 
+    <!-- Header Section -->
     <div class="header">
-        <h1>Staff Dashboard</h1>
-        <p>Welcome to Kerala Queue Management System</p>
+        <div>
+            <h1>Staff Counter Dashboard</h1>
+            <p>
+                Officer: <strong>{{ staff.staff_name }}</strong> | 
+                Role: <strong>{{ staff.role }}</strong> | 
+                Department: <strong class="text-blue">{{ staff.department.department_name }}</strong>
+            </p>
+        </div>
+        <div>
+            <form action="{% url 'staff_call_next' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn-call-next">
+                    📢 Call Next Waiting Token
+                </button>
+            </form>
+        </div>
     </div>
 
+    <!-- Metrics Cards -->
     <div class="cards">
-
         <div class="card">
-            <h3>Today's Tokens</h3>
-            <p>125</p>
+            <h3>Currently Serving</h3>
+            <p class="text-green">{{ current_serving.token_number|default:"None" }}</p>
         </div>
 
         <div class="card">
-            <h3>Current Token</h3>
-            <p>A-023</p>
+            <h3>Dept Waiting Queue</h3>
+            <p class="text-amber">{{ dept_pending_count }}</p>
         </div>
 
         <div class="card">
-            <h3>Completed</h3>
-            <p>84</p>
+            <h3>Completed by Me</h3>
+            <p class="text-blue">{{ today_served_count }}</p>
         </div>
 
         <div class="card">
-            <h3>Pending</h3>
-            <p>41</p>
+            <h3>Assigned Office</h3>
+            <p style="font-size: 1.1rem; color: #475569; margin-top: 10px;">
+                {{ staff.department.office.office_name|default:"Collectorate" }}
+            </p>
         </div>
-
     </div>
 
-    <div class="quick-actions">
-
-        <h2>Quick Actions</h2>
-
-        <div class="buttons">
-
-            <button>Call Next Token</button>
-
-            <button>Complete Token</button>
-
-            <button>Skip Token</button>
-
-            <button>View Queue</button>
-
+    <!-- Active Serving Token Banner (If staff is currently serving a token) -->
+    {% if current_serving %}
+    <div class="serving-banner">
+        <div>
+            <h2>Currently Attending Citizen at Counter</h2>
+            <span class="token-big-badge">{{ current_serving.token_number }}</span>
+            <p style="margin-top: 8px; color: #334155; font-size: 0.95rem;">
+                <strong>Citizen:</strong> {{ current_serving.citizen.citizen_name }} (📞 {{ current_serving.citizen.phone }})<br>
+                <strong>Service:</strong> {{ current_serving.service.service_name }} (Std: {{ current_serving.service.avg_service_min }} mins)
+            </p>
         </div>
 
+        <div class="action-form-group">
+            <!-- Mark Completed Action -->
+            <form action="{% url 'staff_complete_token' current_serving.token_id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn-done">
+                    ✅ Mark Completed
+                </button>
+            </form>
+
+            <!-- Re-Queue / Skip Action -->
+            <form action="{% url 'staff_token_action' current_serving.token_id %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="requeue">
+                <button type="submit" class="btn-requeue">
+                    ⏭ Skip / Re-queue
+                </button>
+            </form>
+
+            <!-- Cancel Token Action -->
+            <form action="{% url 'staff_token_action' current_serving.token_id %}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this token?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="cancel">
+                <button type="submit" class="btn-cancel">
+                    ❌ Cancel Token
+                </button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="serving-info-box">
+        <p style="color: #1e40af; font-size: 0.95rem;">
+            ℹ️ You are not currently attending any citizen. Click <strong>"Call Next Waiting Token"</strong> above or select <strong>"Serve Now"</strong> from the queue below to start.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Live Department Waiting Queue Table -->
+    <div class="queue-table-section">
+        <h2>Live Waiting Queue ({{ staff.department.department_name }})</h2>
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Token #</th>
+                    <th>Citizen Name</th>
+                    <th>Contact Phone</th>
+                    <th>Requested Service</th>
+                    <th>Issued At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tk in department_queue %}
+                <tr>
+                    <td><strong style="color: #003366; font-size: 1.05rem;">{{ tk.token_number }}</strong></td>
+                    <td>{{ tk.citizen.citizen_name }}</td>
+                    <td>{{ tk.citizen.phone }}</td>
+                    <td>{{ tk.service.service_name }}</td>
+                    <td>{{ tk.created_at|date:"H:i" }} ({{ tk.created_at|timesince }} ago)</td>
+                    <td>
+                        <form action="{% url 'staff_start_service' tk.token_id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-serve">▶ Start Service</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #94a3b8; padding: 25px;">
+                        No pending tokens waiting for {{ staff.department.department_name }}. Queue is clear!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Recently Completed Tokens by this Staff -->
+    <div class="queue-table-section">
+        <h2>Recently Completed by Me Today</h2>
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Token #</th>
+                    <th>Citizen</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ctk in completed_tokens %}
+                <tr>
+                    <td><strong>{{ ctk.token_number }}</strong></td>
+                    <td>{{ ctk.citizen.citizen_name }}</td>
+                    <td>{{ ctk.service.service_name }}</td>
+                    <td><span class="text-green" style="font-weight: bold;">✓ Completed</span></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; color: #94a3b8; padding: 15px;">
+                        No completed tokens recorded yet for this session.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 </div>
-
-</body>
-</html>
+{% endblock %}

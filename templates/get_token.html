@@ -1,80 +1,246 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>Get Token - KQMS</title>
+{% block title %}Book Public Service Token - KQMS{% endblock %}
 
-    <link rel="stylesheet"
-          href="{% static 'css/get_token.css' %}">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/get_token.css' %}?v=2">
+{% endblock %}
 
-<body>
-
-    <!-- Header -->
-    <header>
-        <h2>KQMS</h2>
-
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">My Tokens</a>
-            <a href="#">Logout</a>
-        </nav>
-    </header>
-
-
-    <!-- Main Content -->
-    <main>
-
-        <div class="token-card">
-
-            <h1>Get Your Token</h1>
-
-            <p>Select an office and service to get a queue token.</p>
-
-
-            <form>
-
-                <label for="office">Select Office</label>
-
-                <select id="office" name="office">
-                    <option value="">Select Office</option>
-                    <option value="rto">RTO Office</option>
-                    <option value="village">Village Office</option>
-                    <option value="akshaya">Akshaya Centre</option>
-                </select>
-
-
-                <label for="department">Select Department</label>
-
-                <select id="department" name="department">
-                    <option value="">Select Department</option>
-                    <option value="rto">RTO Department</option>
-                    <option value="revenue">Revenue Department</option>
-                    <option value="certificate">Certificate Services</option>
-                </select>
-
-
-                <label for="service">Select Service</label>
-
-                <select id="service" name="service">
-                    <option value="">Select Service</option>
-                    <option value="licence">Driving Licence</option>
-                    <option value="registration">Vehicle Registration</option>
-                    <option value="certificate">Birth Certificate</option>
-                </select>
-
-
-                <button type="submit">
-                    Get Token
-                </button>
-
-            </form>
-
+{% block content %}
+<main class="token-main-container">
+    <div class="token-card">
+        <div class="token-card-header">
+            <span class="token-badge-pill">DIGITAL QUEUE TERMINAL</span>
+            <h1>Book Service Token</h1>
+            <p>Generate your digital queue token to access Kerala Government department counters without physical queues.</p>
         </div>
 
-    </main>
+        {% if error %}
+        <div class="alert alert-error">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
 
-</body>
-</html>
+        <form method="POST" id="tokenBookingForm">
+            {% csrf_token %}
+
+            <!-- 1. Applicant Identification Section -->
+            {% if request.session.user_id %}
+            <input type="hidden" name="citizen_id" value="{{ request.session.user_id }}">
+            <div class="auth-citizen-box">
+                <div class="auth-info">
+                    <span class="auth-tag">✓ Verified Citizen Account</span>
+                    <strong class="auth-name">{{ request.session.username|default:request.session.user_name }}</strong>
+                </div>
+                <span class="active-pill">Logged In</span>
+            </div>
+            {% else %}
+            <div class="form-section">
+                <label class="section-subheading">1. Applicant Identification</label>
+                
+                <div class="applicant-tabs">
+                    <button type="button" class="tab-btn active" id="tabWalkin" onclick="switchApplicantMode('walkin')">
+                        👤 Walk-in Citizen (Quick Book)
+                    </button>
+                    <button type="button" class="tab-btn" id="tabProfile" onclick="switchApplicantMode('profile')">
+                        📋 Select Registered Profile
+                    </button>
+                </div>
+
+                <!-- Mode A: Walk-in Citizen -->
+                <div id="walkinFields" class="applicant-mode-panel active">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="applicant_name">Full Name</label>
+                            <input type="text" id="applicant_name" name="applicant_name" placeholder="e.g. Rahul Varma" value="{{ request.session.user_name|default:'' }}">
+                        </div>
+                        <div class="form-col">
+                            <label for="applicant_phone">Mobile Number</label>
+                            <input type="tel" id="applicant_phone" name="applicant_phone" placeholder="e.g. 9847123456">
+                        </div>
+                    </div>
+                    <span class="help-text">Enter your name & phone to generate a personalized token and track it in real time.</span>
+                </div>
+
+                <!-- Mode B: Select Existing Profile -->
+                <div id="profileFields" class="applicant-mode-panel" style="display: none;">
+                    <label for="citizen_id">Select Existing Citizen Profile</label>
+                    <select id="citizen_id" name="citizen_id">
+                        <option value="">-- Choose Profile for Demo Testing --</option>
+                        {% for citizen in citizens %}
+                        <option value="{{ citizen.citizen_id }}">{{ citizen.citizen_name }} (📞 {{ citizen.phone }})</option>
+                        {% endfor %}
+                    </select>
+                    <span class="help-text">Select one of the pre-seeded citizen accounts to test live queue dispatch.</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- 2. Office & Department Filtering -->
+            <div class="form-section">
+                <label class="section-subheading">2. Office & Department Routing</label>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="officeFilter">Government Office / District</label>
+                        <select id="officeFilter" onchange="filterDepartmentsAndServices()">
+                            <option value="all">🏢 All Offices & Districts</option>
+                            {% for off in offices %}
+                            <option value="{{ off.office_id }}" {% if selected_office_id == off.office_id %}selected{% endif %}>
+                                {{ off.office_name }} ({{ off.district }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-col">
+                        <label for="deptFilter">Department Counter</label>
+                        <select id="deptFilter" onchange="filterServicesByDept()">
+                            <option value="all">🏛️ All Departments</option>
+                            {% for dept in departments %}
+                            <option value="{{ dept.department_id }}" data-office="{{ dept.office.office_id }}" {% if selected_dept_id == dept.department_id %}selected{% endif %}>
+                                {{ dept.department_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Required Public Service -->
+            <div class="form-section">
+                <label class="section-subheading" for="service_id">3. Select Public Service <span class="req">*</span></label>
+                <select id="service_id" name="service_id" required onchange="handleServiceSelection(this)">
+                    <option value="">-- Choose Government Service --</option>
+                    {% for dept in departments %}
+                        <optgroup label="🏢 {{ dept.department_name }} ({{ dept.office.office_name }})"
+                                  class="dept-optgroup dept-grp-{{ dept.department_id }} off-grp-{{ dept.office.office_id }}"
+                                  data-dept-id="{{ dept.department_id }}"
+                                  data-office-id="{{ dept.office.office_id }}">
+                            {% for srv in dept.service_set.all %}
+                            <option value="{{ srv.service_id }}"
+                                    data-dept="{{ dept.department_name }}"
+                                    data-dept-id="{{ dept.department_id }}"
+                                    data-office="{{ dept.office.office_name }}"
+                                    data-office-id="{{ dept.office.office_id }}"
+                                    data-dist="{{ dept.office.district|default:'Statewide' }}"
+                                    data-min="{{ srv.avg_service_min }}"
+                                    {% if selected_service_id == srv.service_id %}selected{% endif %}>
+                                {{ srv.service_name }} (⏱ ~{{ srv.avg_service_min }} mins)
+                            </option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Live Service Routing Card -->
+            <div id="serviceSummaryBox" class="service-preview" style="display: none;">
+                <h4>Routing Summary & Estimated Duration</h4>
+                <div class="summary-grid">
+                    <div><span class="lbl">Office:</span> <strong id="boxOffice">-</strong></div>
+                    <div><span class="lbl">District:</span> <strong id="boxDist">-</strong></div>
+                    <div><span class="lbl">Department:</span> <strong id="boxDept">-</strong></div>
+                    <div><span class="lbl">Avg Duration:</span> <strong id="boxTime">-</strong> mins</div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="btnSubmitToken">
+                🎫 Generate Digital Queue Token &rarr;
+            </button>
+        </form>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function switchApplicantMode(mode) {
+        const walkin = document.getElementById('walkinFields');
+        const profile = document.getElementById('profileFields');
+        const tabW = document.getElementById('tabWalkin');
+        const tabP = document.getElementById('tabProfile');
+        const citSelect = document.getElementById('citizen_id');
+
+        if (mode === 'walkin') {
+            walkin.style.display = 'block';
+            profile.style.display = 'none';
+            tabW.classList.add('active');
+            tabP.classList.remove('active');
+            if (citSelect) citSelect.value = '';
+        } else {
+            walkin.style.display = 'none';
+            profile.style.display = 'block';
+            tabW.classList.remove('active');
+            tabP.classList.add('active');
+        }
+    }
+
+    function handleServiceSelection(selectElement) {
+        if (!selectElement || selectElement.selectedIndex < 0) return;
+        const selected = selectElement.options[selectElement.selectedIndex];
+        const summaryBox = document.getElementById('serviceSummaryBox');
+        if (selected && selected.value) {
+            document.getElementById('boxDept').textContent = selected.getAttribute('data-dept') || '-';
+            document.getElementById('boxOffice').textContent = selected.getAttribute('data-office') || '-';
+            document.getElementById('boxDist').textContent = selected.getAttribute('data-dist') || '-';
+            document.getElementById('boxTime').textContent = selected.getAttribute('data-min') || '-';
+            summaryBox.style.display = 'block';
+        } else {
+            summaryBox.style.display = 'none';
+        }
+    }
+
+    function filterDepartmentsAndServices() {
+        const officeVal = document.getElementById('officeFilter').value;
+        const deptSelect = document.getElementById('deptFilter');
+        const serviceSelect = document.getElementById('service_id');
+
+        deptSelect.value = 'all';
+
+        Array.from(deptSelect.options).forEach(opt => {
+            if (opt.value === 'all') return;
+            const offId = opt.getAttribute('data-office');
+            if (officeVal === 'all' || offId === officeVal) {
+                opt.style.display = '';
+            } else {
+                opt.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('#service_id optgroup').forEach(grp => {
+            const offId = grp.getAttribute('data-office-id');
+            if (officeVal === 'all' || offId === officeVal) {
+                grp.style.display = '';
+            } else {
+                grp.style.display = 'none';
+            }
+        });
+
+        handleServiceSelection(serviceSelect);
+    }
+
+    function filterServicesByDept() {
+        const deptVal = document.getElementById('deptFilter').value;
+        const serviceSelect = document.getElementById('service_id');
+
+        document.querySelectorAll('#service_id optgroup').forEach(grp => {
+            const deptId = grp.getAttribute('data-dept-id');
+            if (deptVal === 'all' || deptId === deptVal) {
+                grp.style.display = '';
+            } else {
+                grp.style.display = 'none';
+            }
+        });
+
+        handleServiceSelection(serviceSelect);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const sel = document.getElementById('service_id');
+        if (sel && sel.value) {
+            handleServiceSelection(sel);
+        }
+    });
+</script>
+{% endblock %}

@@ -1,91 +1,146 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+{% block title %}Citizen Dashboard - KQMS{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/user_dashboard.css' %}">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user_dashboard.css' %}">
+{% endblock %}
 
-</head>
-<body>
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-<div class="sidebar">
+{% block content %}
+<!-- Fixed Sidebar -->
+<aside class="sidebar">
+    <h2>KQMS Citizen</h2>
 
-    <h2>KQMS</h2>
+    <a href="{% url 'user_dashboard' %}" class="active">🏠 My Dashboard</a>
+    <a href="{% url 'generate_token' %}">🎫 Book Service Token</a>
+    <a href="{% url 'queue_management' %}">📊 Live Queue Board</a>
+    <a href="{% url 'index_page' %}#services">🏢 Browse Services</a>
+    <a href="{% url 'index_page' %}">🌐 Portal Home</a>
+    <a href="{% url 'user_logout' %}" class="logout">🚪 Logout</a>
+</aside>
 
-    <a href="{% url 'user_dashboard' %}">🏠 Dashboard</a>
-    <a href="#">🎫 Book Token</a>
-    <a href="#">📋 My Tokens</a>
-    <a href="#">⏳ Queue Status</a>
-    <a href="#">👤 My Profile</a>
-    <a href="{% url 'user_logout' %}">🚪 Logout</a>
-
-</div>
-
-<div class="main-content">
-
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Top Header -->
     <div class="header">
-        <h1>Welcome {{ user.username }}</h1>
-        <p>Kerala Queue Management System</p>
+        <div>
+            <h1>Welcome, {{ user.citizen_name }}</h1>
+            <p>Citizen ID: <strong>CIT-{{ user.citizen_id }}</strong> | Registered Phone: <strong>{{ user.phone }}</strong></p>
+        </div>
+        <div>
+            <a href="{% url 'generate_token' %}" class="btn-book-header">+ Book New Token</a>
+        </div>
     </div>
 
+    <!-- Metric Cards -->
     <div class="cards">
-
         <div class="card">
-            <h3>Booked Tokens</h3>
-            <p>5</p>
+            <h3>Total Booked Tokens</h3>
+            <p>{{ total_booked }}</p>
         </div>
 
         <div class="card">
-            <h3>Current Token</h3>
-            <p>A-012</p>
+            <h3>Active in Queue</h3>
+            <p style="color: #d97706;">{{ total_active }}</p>
         </div>
 
         <div class="card">
-            <h3>Queue Position</h3>
-            <p>8</p>
+            <h3>Completed Services</h3>
+            <p style="color: #16a34a;">{{ total_completed }}</p>
         </div>
-
     </div>
 
-    <div class="profile">
+    <!-- Active Serving / Waiting Token Banner -->
+    {% if latest_active %}
+    <div class="active-token-banner">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <span class="active-badge">Active Queue Token</span>
+                <h2 style="font-size: 2rem; color: #172554; margin: 8px 0 4px;">{{ latest_active.token.token_number }}</h2>
+                <div style="color: #475569; font-size: 0.95rem;">
+                    Service: <strong>{{ latest_active.token.service.service_name }}</strong> ({{ latest_active.token.service.department.department_name }})
+                </div>
+                <div style="color: #2563eb; font-size: 0.9rem; font-weight: 600; margin-top: 4px;">
+                    Citizens Ahead: {{ latest_active.people_ahead }} | Current Status: {{ latest_active.token.status }}
+                </div>
+            </div>
+            <div>
+                <a href="{% url 'token_status' token_id=latest_active.token.token_id %}" class="btn-track">
+                    🔍 Live Tracker & Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
-        <h2>My Profile</h2>
-
-        {% if user.picture %}
-            <img src="{{ user.picture.url }}" alt="Profile Picture">
-        {% endif %}
-
+    <!-- Token History Table -->
+    <div class="table-container">
+        <h2>My Token History</h2>
         <table>
-
-            <tr>
-                <th>Username</th>
-                <td>{{ user.username }}</td>
-            </tr>
-
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-
-            <tr>
-                <th>Phone</th>
-                <td>{{ user.phone }}</td>
-            </tr>
-
-            <tr>
-                <th>Address</th>
-                <td>{{ user.address }}</td>
-            </tr>
-
+            <thead>
+                <tr>
+                    <th>Token Number</th>
+                    <th>Service Requested</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Date & Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for token in user_tokens %}
+                <tr>
+                    <td><strong>{{ token.token_number }}</strong></td>
+                    <td>{{ token.service.service_name }}</td>
+                    <td>{{ token.service.department.department_name }}</td>
+                    <td>
+                        <span class="status-badge {% if token.status == 'Completed' %}badge-completed{% elif token.status == 'Serving' %}badge-serving{% else %}badge-waiting{% endif %}">
+                            {{ token.status }}
+                        </span>
+                    </td>
+                    <td>{{ token.created_at|date:"M d, Y - h:i A" }}</td>
+                    <td>
+                        <a href="{% url 'token_status' token_id=token.token_id %}" style="color: #2563eb; font-weight: 600; text-decoration: none; font-size: 0.85rem;">
+                            View Tracker &rarr;
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #64748b; padding: 30px;">
+                        You have not generated any tokens yet. <a href="{% url 'generate_token' %}" style="color: #2563eb; font-weight: 600;">Book your first token</a>.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-
     </div>
 
-</div>
-
-</body>
-</html>
+    <!-- Citizen Profile Information -->
+    <div class="profile-card">
+        <h2>Citizen Profile Details</h2>
+        <div class="profile-grid">
+            <div>
+                <span class="label">Full Name</span>
+                <strong>{{ user.citizen_name }}</strong>
+            </div>
+            <div>
+                <span class="label">Primary Phone</span>
+                <strong>{{ user.phone }}</strong>
+            </div>
+            <div>
+                <span class="label">Registered Email</span>
+                <strong>{{ user.email }}</strong>
+            </div>
+            <div>
+                <span class="label">Account Status</span>
+                <strong style="color: #16a34a;">Verified Citizen</strong>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

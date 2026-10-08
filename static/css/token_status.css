@@ -1,235 +1,193 @@
+/* ========================================================
+   KQMS - Token Status Stylesheet (Clean & Unified)
+   ======================================================== */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f9;
+    background: #f8fafc;
+    color: #1e293b;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-
 /* Header */
-
 header {
-    height: 65px;
-
+    height: 64px;
     background: #172554;
-
-    color: white;
-
+    color: #ffffff;
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     padding: 0 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 header h2 {
-    font-size: 25px;
+    font-size: 1.35rem;
+    font-weight: 700;
 }
 
 nav {
     display: flex;
-
-    gap: 25px;
+    gap: 20px;
 }
 
 nav a {
-    color: white;
-
+    color: #cbd5e1;
     text-decoration: none;
-
-    font-size: 14px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.15s;
 }
 
-nav a:hover,
-nav .active {
-    color: #93c5fd;
+nav a:hover, nav a.active {
+    color: #ffffff;
 }
 
-
-/* Main */
-
+/* Main Content */
 main {
-    min-height: calc(100vh - 65px);
-
+    flex: 1;
     display: flex;
-
     justify-content: center;
-
     align-items: center;
-
-    padding: 30px;
+    padding: 32px 20px;
 }
-
-
-/* Status Card */
 
 .status-card {
-    width: 450px;
-
-    background: white;
-
-    padding: 35px;
-
-    border-radius: 10px;
-
+    width: 100%;
+    max-width: 460px;
+    background: #ffffff;
+    padding: 36px 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
     text-align: center;
-
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
 }
 
 .status-card h1 {
     color: #172554;
-
-    margin-bottom: 8px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 6px;
 }
 
-.status-card > p {
+.status-card p {
     color: #64748b;
-
-    font-size: 14px;
-
-    margin-bottom: 25px;
+    font-size: 0.92rem;
+    margin-bottom: 24px;
 }
-
 
 /* Token Box */
-
 .token-box {
-    background: #eff6ff;
-
+    background: #f1f5f9;
+    border-radius: 10px;
     padding: 20px;
-
-    border-radius: 8px;
-
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
 }
 
 .token-box span {
+    font-size: 0.8rem;
     color: #64748b;
-
-    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 6px;
 }
 
 .token-box h2 {
-    color: #2563eb;
-
-    font-size: 38px;
-
-    margin-top: 5px;
+    font-size: 2.75rem;
+    font-weight: 900;
+    color: #172554;
 }
 
-
-/* Details */
-
+/* Details Grid */
 .details {
     display: grid;
-
     grid-template-columns: 1fr 1fr;
-
-    gap: 12px;
-
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 24px;
+    text-align: left;
 }
 
 .details div {
-    padding: 12px;
-
     background: #f8fafc;
-
-    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    padding: 12px 14px;
+    border-radius: 8px;
 }
 
 .details span {
     display: block;
-
+    font-size: 0.78rem;
     color: #64748b;
-
-    font-size: 12px;
-
-    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .details strong {
-    color: #334155;
-
-    font-size: 14px;
+    font-size: 0.95rem;
+    color: #0f172a;
 }
 
-
-/* Status */
-
+/* Status Badge */
 .status {
-    display: inline-block;
-
-    padding: 8px 20px;
-
+    padding: 8px 18px;
     border-radius: 20px;
-
-    font-size: 14px;
-
-    font-weight: bold;
-
+    font-weight: 700;
+    font-size: 0.88rem;
+    display: inline-block;
     margin-bottom: 20px;
 }
 
-.waiting {
-    background: #fef3c7;
+.status.waiting {
+    background: #e0f2fe;
+    color: #0369a1;
+}
 
+.status.serving {
+    background: #fef3c7;
     color: #92400e;
 }
 
-
-/* Refresh Button */
+.status.completed {
+    background: #dcfce7;
+    color: #166534;
+}
 
 .refresh-btn {
     width: 100%;
-
     padding: 12px;
-
     border: none;
-
     border-radius: 6px;
-
     background: #2563eb;
-
-    color: white;
-
-    font-size: 14px;
-
-    font-weight: bold;
-
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: background 0.15s;
 }
 
 .refresh-btn:hover {
     background: #1d4ed8;
 }
 
-
-/* Responsive */
-
 @media (max-width: 500px) {
-
     header {
-        padding: 0 20px;
+        padding: 0 16px;
     }
-
-    nav {
-        gap: 10px;
-    }
-
     .status-card {
-        width: 100%;
-
-        padding: 25px;
+        padding: 24px;
     }
-
     .details {
         grid-template-columns: 1fr;
     }

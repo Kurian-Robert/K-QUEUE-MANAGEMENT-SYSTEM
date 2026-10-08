@@ -1,25 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
+{% block title %}Citizen Registration - KQMS{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/user_register.css' %}">
-</head>
-<body>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user_register.css' %}">
+{% endblock %}
 
-<div class="register-container">
-
-    <div class="register-box">
-
-        <h2>User Registration</h2>
+{% block content %}
+<div class="register-container" style="min-height: 75vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
+    <div class="register-box" style="max-width: 480px; width: 100%;">
+        <h2>Citizen Registration</h2>
         <p class="subtitle">Kerala Queue Management System</p>
 
         <form method="POST" enctype="multipart/form-data">
-
             {% csrf_token %}
 
             <div class="input-group">
@@ -52,22 +46,13 @@
                 <input type="file" name="picture">
             </div>
 
-            <button type="submit" class="register-btn">
-                Register
-            </button>
-
+            <button type="submit" class="register-btn">Register</button>
         </form>
 
         <div class="links">
             <p>Already have an account?</p>
-            <a href="{% url 'user_login' %}">
-                Login Here
-            </a>
+            <a href="{% url 'user_login' %}">Login Here</a>
         </div>
-
     </div>
-
 </div>
-
-</body>
-</html>
+{% endblock %}

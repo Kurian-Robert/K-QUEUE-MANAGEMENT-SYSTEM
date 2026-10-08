@@ -1,60 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Login</title>
+{% block title %}Staff Login - KQMS{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/staff_login.css' %}">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_login.css' %}">
+{% endblock %}
 
-</head>
-<body>
-
-<div class="login-container">
-
-    <div class="login-box">
-
+{% block content %}
+<div class="login-container" style="min-height: 65vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
+    <div class="login-box" style="max-width: 440px; width: 100%;">
         <h2>Staff Login</h2>
         <p class="subtitle">Kerala Queue Management System</p>
 
         <form method="POST">
-
             {% csrf_token %}
-
             <div class="input-group">
                 <label>Username</label>
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Enter Username"
-                    required>
+                <input type="text" name="username" placeholder="Enter Staff Username" required>
             </div>
 
             <div class="input-group">
                 <label>Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter Password"
-                    required>
+                <input type="password" name="password" placeholder="Enter Password" required>
             </div>
 
-            <button type="submit" class="login-btn">
-                Login
-            </button>
-
+            <button type="submit" class="login-btn">Login</button>
         </form>
 
         <div class="links">
             <p>New Staff?</p>
             <a href="{% url 'staff_register' %}">Create Account</a>
         </div>
-
     </div>
-
 </div>
-
-</body>
-</html>
+{% endblock %}

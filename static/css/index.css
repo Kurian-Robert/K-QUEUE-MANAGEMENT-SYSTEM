@@ -1,132 +1,436 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+/* ========================================================
+   KQMS - Kerala Queue Management System
+   Clean, Modern & Systematic Landing Page Stylesheet
+   ======================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-body{
-    background:#f5f7fa;
+body {
+    background: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.navbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 60px;
-    background:#003366;
+/* ========================================================
+   1. Main Institutional Navbar
+   ======================================================== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 48px;
+    background: #003366;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.logo h2{
-    color:#fff;
+.logo {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
 }
 
-.navbar ul{
-    display:flex;
-    list-style:none;
+.logo-title {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
 }
 
-.navbar ul li{
-    margin-left:25px;
+.logo-sub {
+    color: #93c5fd;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-.navbar ul li a{
-    color:#fff;
-    text-decoration:none;
-    font-weight:bold;
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 28px;
 }
 
-.hero{
-    text-align:center;
-    padding:100px 20px;
-    background:linear-gradient(135deg,#0d6efd,#003366);
-    color:#fff;
+.nav-links li a {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 0.94rem;
+    font-weight: 600;
+    transition: color 0.15s ease;
 }
 
-.hero h1{
-    font-size:48px;
-    margin-bottom:20px;
+.nav-links li a:hover,
+.nav-links li a.active {
+    color: #ffffff;
 }
 
-.hero p{
-    width:60%;
-    margin:auto;
-    font-size:18px;
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.btn{
-    display:inline-block;
-    margin-top:30px;
-    padding:14px 30px;
-    background:#fff;
-    color:#003366;
-    text-decoration:none;
-    border-radius:6px;
-    font-weight:bold;
+/* User Status Pill */
+.user-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    color: #ffffff;
 }
 
-.roles{
-    padding:70px;
-    text-align:center;
+.role-tag {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 12px;
+    letter-spacing: 0.4px;
 }
 
-.card-container{
-    display:flex;
-    justify-content:center;
-    gap:30px;
-    margin-top:40px;
-    flex-wrap:wrap;
+.role-tag.admin { background: #f59e0b; color: #78350f; }
+.role-tag.staff { background: #38bdf8; color: #0c4a6e; }
+.role-tag.citizen { background: #4ade80; color: #14532d; }
+
+.user-name {
+    font-size: 0.88rem;
+    font-weight: 600;
 }
 
-.card{
-    width:300px;
-    background:#fff;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 5px 15px rgba(0,0,0,.15);
+.btn-sm {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
 }
 
-.card h3{
-    color:#003366;
-    margin-bottom:15px;
+.btn-primary {
+    background: #0d6efd;
+    color: #ffffff !important;
 }
 
-.card p{
-    margin-bottom:20px;
+.btn-primary:hover {
+    background: #0b5ed7;
+    transform: translateY(-1px);
 }
 
-.card a{
-    display:inline-block;
-    padding:10px 20px;
-    background:#0d6efd;
-    color:#fff;
-    text-decoration:none;
-    border-radius:5px;
+.btn-logout {
+    background: #dc2626;
+    color: #ffffff !important;
 }
 
-.features{
-    padding:70px;
-    background:#eef3f8;
-    text-align:center;
+.btn-logout:hover {
+    background: #b91c1c;
 }
 
-.feature-box{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:25px;
-    margin-top:40px;
+/* ========================================================
+   2. Hero Section
+   ======================================================== */
+.hero {
+    text-align: center;
+    padding: 80px 24px 88px;
+    background: linear-gradient(135deg, #0d6efd 0%, #003366 100%);
+    color: #ffffff;
 }
 
-.feature{
-    background:#fff;
-    padding:25px;
-    border-radius:10px;
-    box-shadow:0 5px 10px rgba(0,0,0,.1);
+.hero h1 {
+    font-size: 2.75rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
 }
 
-footer{
-    background:#003366;
-    color:#fff;
-    text-align:center;
-    padding:20px;
+.hero p {
+    max-width: 660px;
+    margin: 0 auto;
+    font-size: 1.12rem;
+    color: #dbeafe;
+    line-height: 1.65;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: #16a34a;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+}
+
+.btn-primary:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.45);
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #003366 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.btn-secondary:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* ========================================================
+   3. Roles ("Login As") Section
+   ======================================================== */
+.roles {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 72px 24px;
+    text-align: center;
+}
+
+.roles h2 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+}
+
+.section-desc {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 40px;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #ffffff;
+    width: 320px;
+    padding: 36px 28px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.09);
+    border-color: #cbd5e1;
+}
+
+/* Role Top Accent Bars */
+.card-admin { border-top: 4px solid #d97706; }
+.card-staff { border-top: 4px solid #0284c7; }
+.card-user  { border-top: 4px solid #16a34a; }
+
+.card-icon {
+    font-size: 2.4rem;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.card:hover .card-icon {
+    transform: scale(1.08);
+}
+
+.card-admin .card-icon { background: #fffbeb; border: 1px solid #fef3c7; }
+.card-staff .card-icon { background: #f0f9ff; border: 1px solid #e0f2fe; }
+.card-user  .card-icon { background: #f0fdf4; border: 1px solid #dcfce7; }
+
+.card h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 0.92rem;
+    color: #64748b;
+    line-height: 1.55;
+    margin-bottom: 24px;
+}
+
+.card-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-decoration: none;
+    color: #ffffff !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-admin { background: #1e293b; }
+.btn-admin:hover { background: #0f172a; transform: translateY(-1px); }
+
+.btn-staff { background: #0284c7; }
+.btn-staff:hover { background: #0369a1; transform: translateY(-1px); }
+
+.btn-user  { background: #16a34a; }
+.btn-user:hover  { background: #15803d; transform: translateY(-1px); }
+
+/* ========================================================
+   4. Key Features Section
+   ======================================================== */
+.features {
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 72px 24px;
+    text-align: center;
+}
+
+.features h2 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+}
+
+.feature-box {
+    max-width: 1140px;
+    margin: 40px auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+}
+
+.feature {
+    background: #ffffff;
+    padding: 30px 24px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+}
+
+.feature h3 {
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: #003366;
+    margin-bottom: 8px;
+}
+
+.feature p {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.55;
+}
+
+/* ========================================================
+   5. Footer
+   ======================================================== */
+footer {
+    background: #003366;
+    color: #94a3b8;
+    padding: 40px 24px 24px;
+    margin-top: auto;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 18px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+}
+
+/* ========================================================
+   6. Responsive Adaptations
+   ======================================================== */
+@media (max-width: 900px) {
+    .navbar {
+        padding: 14px 20px;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .hero h1 {
+        font-size: 2.1rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .roles, .features {
+        padding: 48px 16px;
+    }
+    .card-container {
+        gap: 20px;
+    }
+    .card {
+        width: 100%;
+        max-width: 360px;
+    }
 }

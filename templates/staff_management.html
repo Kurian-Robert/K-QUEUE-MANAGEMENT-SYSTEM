@@ -1,165 +1,219 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>Staff Management - KQMS</title>
+{% block title %}Staff Management - KQMS{% endblock %}
 
-    <link rel="stylesheet"
-          href="{% static 'css/staff_management.css' %}">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/staff_management.css' %}">
+{% endblock %}
 
-<body>
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-    <!-- Sidebar -->
-    <div class="sidebar">
+{% block content %}
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>KQMS Admin</h2>
+    <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+    <a href="{% url 'office_management' %}">Office Management</a>
+    <a href="{% url 'department_management' %}">Department Management</a>
+    <a href="{% url 'service_management' %}">Service Management</a>
+    <a href="{% url 'staff_management' %}" class="active">Staff Management</a>
+    <a href="{% url 'user_management' %}">Manage Users</a>
+    <a href="{% url 'queue_management' %}">Queue Management</a>
+    <a href="{% url 'adbms_dashboard' %}">ADBMS Reports</a>
+    <a href="{% url 'admin_logout' %}" class="logout">Logout</a>
+</div>
 
-        <h2>KQMS</h2>
+<!-- Main Content -->
+<div class="main-content">
 
-        <a href="#">Dashboard</a>
-        <a href="#">Office Management</a>
-        <a href="#">Department Management</a>
-        <a href="#">Service Management</a>
-        <a href="#" class="active">Staff Management</a>
-        <a href="#">Queue Management</a>
-
-        <a href="#" class="logout">Logout</a>
-
-    </div>
-
-
-    <!-- Main Content -->
-    <div class="main-content">
-
-        <!-- Header -->
-        <div class="header">
-
-            <div>
-                <h1>Staff Management</h1>
-                <p>Manage staff members and their departments.</p>
-            </div>
-
-            <button class="add-btn">
-                + Add Staff
-            </button>
-
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>Staff Management</h1>
+            <p>Manage staff members, assigned departments, counters, and credentials.</p>
         </div>
 
+        <button class="add-btn" onclick="toggleAddPanel()">
+            + Add Staff Member
+        </button>
+    </div>
 
-        <!-- Staff Card -->
-        <div class="card">
+    <!-- Add Staff Panel (Collapsible) -->
+    <div id="addStaffPanel" class="add-panel card" style="display: none; margin-bottom: 25px;">
+        <h3 style="color: #172554; margin-bottom: 16px;">Add New Staff Member</h3>
+        <form method="POST" action="{% url 'staff_management' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+                <div class="form-group">
+                    <label>Staff Name (Login Username)</label>
+                    <input type="text" name="staff_name" placeholder="e.g. Ramesh Kumar" required>
+                </div>
+                <div class="form-group">
+                    <label>Assigned Department</label>
+                    <select name="department_id" required>
+                        {% for dept in departments %}
+                        <option value="{{ dept.department_id }}">{{ dept.department_name }} ({{ dept.office.office_name }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Counter & Role Designation</label>
+                    <input type="text" name="role" placeholder="e.g. Counter 1 - Senior Clerk" required>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
+                <button type="button" class="btn-secondary" onclick="toggleAddPanel()">Cancel</button>
+                <button type="submit" class="btn-primary">+ Register Staff</button>
+            </div>
+        </form>
+    </div>
 
-            <h2>Staff List</h2>
-
+    <!-- Staff Card -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <h2>Registered Staff List ({{ staff_members|length }})</h2>
 
             <!-- Search -->
-            <div class="search">
-
+            <form method="GET" action="{% url 'staff_management' %}" class="search" style="margin-bottom: 0;">
                 <input
                     type="text"
-                    placeholder="Search staff..."
+                    name="q"
+                    placeholder="Search by name, role, dept..."
+                    value="{{ query }}"
                 >
-
-                <button>Search</button>
-
-            </div>
-
-
-            <!-- Staff Table -->
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Staff ID</th>
-                        <th>Staff Name</th>
-                        <th>Department</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>1</td>
-                        <td>Arun Kumar</td>
-                        <td>RTO</td>
-                        <td>Staff</td>
-
-                        <td>
-                            <span class="active">
-                                Active
-                            </span>
-                        </td>
-
-                        <td>
-                            <button class="edit">
-                                Edit
-                            </button>
-
-                            <button class="delete">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>2</td>
-                        <td>Rahul Mathew</td>
-                        <td>Revenue</td>
-                        <td>Staff</td>
-
-                        <td>
-                            <span class="active">
-                                Active
-                            </span>
-                        </td>
-
-                        <td>
-                            <button class="edit">
-                                Edit
-                            </button>
-
-                            <button class="delete">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>3</td>
-                        <td>Anu Joseph</td>
-                        <td>Certificate Services</td>
-                        <td>Staff</td>
-
-                        <td>
-                            <span class="inactive">
-                                Inactive
-                            </span>
-                        </td>
-
-                        <td>
-                            <button class="edit">
-                                Edit
-                            </button>
-
-                            <button class="delete">
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
+                <button type="submit">Search</button>
+                {% if query %}
+                <a href="{% url 'staff_management' %}" class="btn-secondary" style="text-decoration:none; padding: 10px 14px; font-size: 13px;">Clear</a>
+                {% endif %}
+            </form>
         </div>
 
+        <!-- Staff Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Staff ID</th>
+                    <th>Staff Name (Username)</th>
+                    <th>Assigned Department</th>
+                    <th>Counter / Role</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Administrative Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for staff in staff_members %}
+                <tr>
+                    <td><strong>STF-{{ staff.staff_id }}</strong></td>
+                    <td>
+                        <strong style="color:#172554;">{{ staff.staff_name }}</strong>
+                    </td>
+                    <td>{{ staff.department.department_name }}</td>
+                    <td>{{ staff.role|cut:"[OFF] " }}</td>
+                    <td>
+                        {% if "[OFF]" in staff.role or "(Inactive)" in staff.role %}
+                        <span class="inactive">Inactive</span>
+                        {% else %}
+                        <span class="active">Active</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="btn-group">
+                            <button type="button"
+                                    class="edit"
+                                    onclick="openEditModal('{{ staff.staff_id }}', '{{ staff.staff_name|escapejs }}', '{{ staff.department.department_id }}', '{{ staff.role|cut:"[OFF] "|escapejs }}')">
+                                Edit
+                            </button>
+                            
+                            <form method="POST" action="{% url 'staff_management' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle_status">
+                                <input type="hidden" name="staff_id" value="{{ staff.staff_id }}">
+                                <button type="submit" class="toggle-btn" title="Toggle Active / Inactive Status">
+                                    {% if "[OFF]" in staff.role or "(Inactive)" in staff.role %}Activate{% else %}Deactivate{% endif %}
+                                </button>
+                            </form>
+
+                            <form method="POST" action="{% url 'staff_management' %}" style="display: inline;" onsubmit="return confirm('Remove staff member {{ staff.staff_name }}?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="staff_id" value="{{ staff.staff_id }}">
+                                <button type="submit" class="delete" title="Delete Staff Record">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" style="text-align:center; padding: 25px; color: #64748b;">No staff members found matching criteria.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-</body>
-</html>
+</div>
+
+<!-- Edit Staff Modal -->
+<div id="editStaffModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Edit Staff Member & Counter</h3>
+            <button type="button" class="modal-close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <form method="POST" action="{% url 'staff_management' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="staff_id" id="editStaffId">
+
+            <div class="form-group">
+                <label>Staff Name (Username for Login)</label>
+                <input type="text" name="staff_name" id="editStaffName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Department</label>
+                <select name="department_id" id="editDeptId" required>
+                    {% for dept in departments %}
+                    <option value="{{ dept.department_id }}">{{ dept.department_name }} ({{ dept.office.office_name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Counter Designation & Role</label>
+                <input type="text" name="role" id="editRole" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleAddPanel() {
+        var panel = document.getElementById("addStaffPanel");
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+    }
+
+    function openEditModal(staffId, staffName, deptId, role) {
+        document.getElementById('editStaffId').value = staffId;
+        document.getElementById('editStaffName').value = staffName;
+        document.getElementById('editDeptId').value = deptId;
+        document.getElementById('editRole').value = role;
+        document.getElementById('editStaffModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editStaffModal').classList.remove('active');
+    }
+</script>
+{% endblock %}

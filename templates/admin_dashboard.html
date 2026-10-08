@@ -1,68 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'base.html' %}
+{% load static %}
 
-  {% load static %}
+{% block title %}Admin Dashboard - KQMS{% endblock %}
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}?v=2">
+{% endblock %}
 
-  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-</head>
+{% block content %}
+<!-- Left Sidebar with Function Actions -->
+<aside class="sidebar">
+    <h2>KQMS Admin</h2>
+    <a href="{% url 'admin_dashboard' %}" class="active-nav">Dashboard</a>
+    <a href="{% url 'office_management' %}">Offices</a>
+    <a href="{% url 'department_management' %}">Departments</a>
+    <a href="{% url 'service_management' %}">Services</a>
+    <a href="{% url 'staff_management' %}">Manage Staff</a>
+    <a href="{% url 'user_management' %}">Manage Users</a>
+    <a href="{% url 'queue_management' %}">Live Queue</a>
+    <a href="{% url 'adbms_dashboard' %}" style="background: #0284c7; margin-top: 15px;">ADBMS Reports</a>
+    <a href="{% url 'admin_logout' %}" style="margin-top: 20px; color: #fca5a5;">Logout</a>
+</aside>
 
-<body>
+<!-- Main Content Area -->
+<main class="main">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>System Administration Dashboard</h1>
+            <p style="color: #64748b; margin-top: 4px;">Kerala Queue Management System (KQMS) Overview</p>
+        </div>
+        <div>
+            <a href="{% url 'adbms_dashboard' %}" style="text-decoration:none; background:#003366; color:white; padding:10px 18px; border-radius:6px; font-size:0.85rem; font-weight:600;">Open ADBMS Showcase</a>
+        </div>
+    </div>
 
-<div class="sidebar">
+    <!-- Live Dynamic Statistics Cards -->
+    <section class="cards">
+        <div class="card">
+            <h3>Total Citizens</h3>
+            <p>{{ total_citizens }}</p>
+        </div>
 
-<h2>KQMS</h2>
+        <div class="card">
+            <h3>Total Staff</h3>
+            <p>{{ total_staff }}</p>
+        </div>
 
-    <a href="#">Dashboard</a>
+        <div class="card">
+            <h3>Offices</h3>
+            <p>{{ total_offices }}</p>
+        </div>
 
-    <a href="#">Manage Users</a>
+        <div class="card">
+            <h3>Departments</h3>
+            <p>{{ total_departments }}</p>
+        </div>
 
-    <a href="#">Manage Staff</a>
+        <div class="card">
+            <h3>Active Tokens</h3>
+            <p style="color: #f59e0b;">{{ waiting_tokens|add:serving_tokens }}</p>
+        </div>
 
-    <a href="#">Departments</a>
+        <div class="card">
+            <h3>Completed Tokens</h3>
+            <p style="color: #10b981;">{{ completed_tokens }}</p>
+        </div>
+    </section>
 
-    <a href="#">Services</a>
-
-    <a href="#">Reports</a>
-
-    <a href="{% url 'admin_logout' %}">Logout</a>
-
-</div>
-
-<div class="main">
-
-  <h1>Admin Dashboard</h1>
-
-<div class="cards">
-
-<div class="card">
-  <h3>Total Users</h3>
-<p>150</p>
-</div>
-
-<div class="card">
-  <h3>Total Staff</h3>
-  <p>25</p>
-</div>
-
-<div class="card">
-  <h3>Departments</h3>
-  <p>12</p>
-</div>
-
-<div class="card">
-  <h3>Today's Tokens</h3>
-  <p>310</p>
-</div>
-
-</div>
-
-</div>
-
-</body>
-</html>
+    <!-- Recent Tokens Activity Table -->
+    <section class="recent-table-box">
+        <h2>Recent Queue Activity</h2>
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Token Number</th>
+                    <th>Citizen Name</th>
+                    <th>Public Service</th>
+                    <th>Handling Staff</th>
+                    <th>Status</th>
+                    <th>Issued Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tk in recent_tokens %}
+                <tr>
+                    <td><strong>{{ tk.token_number }}</strong></td>
+                    <td>{{ tk.citizen.citizen_name }}</td>
+                    <td>{{ tk.service.service_name }}</td>
+                    <td>{{ tk.staff.staff_name|default:"Unassigned (Waiting Pool)" }}</td>
+                    <td>
+                        <span class="status-badge {% if tk.status == 'Completed' %}badge-completed{% elif tk.status == 'Serving' %}badge-serving{% else %}badge-waiting{% endif %}">
+                            {{ tk.status }}
+                        </span>
+                    </td>
+                    <td>{{ tk.created_at|date:"M d, H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" style="text-align:center;">No recent token activity found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+{% endblock %}

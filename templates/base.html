@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kerala Queue Management System (KQMS){% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}?v=5">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    {% block navbar %}
+    <!-- Main Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{% url 'index_page' %}" class="logo">
+                <span class="logo-title">KQMS</span>
+                <span class="logo-sub">Government of Kerala</span>
+            </a>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="{% url 'index_page' %}">Home</a></li>
+            <li><a href="{% url 'generate_token' %}">Get Token</a></li>
+            <li><a href="{% url 'queue_management' %}">Live Queue</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            {% if auth_admin_id %}
+                <div class="user-pill">
+                    <span class="role-tag admin">Admin</span>
+                    <span class="user-name">{{ auth_admin_name }}</span>
+                </div>
+                <a href="{% url 'admin_dashboard' %}" class="btn-sm btn-primary">Dashboard</a>
+                <a href="{% url 'admin_logout' %}" class="btn-sm btn-logout">Logout</a>
+
+            {% elif auth_staff_id %}
+                <div class="user-pill">
+                    <span class="role-tag staff">Staff</span>
+                    <span class="user-name">{{ auth_staff_name }}</span>
+                </div>
+                <a href="{% url 'staff_dashboard' %}" class="btn-sm btn-primary">Counter</a>
+                <a href="{% url 'staff_logout' %}" class="btn-sm btn-logout">Logout</a>
+
+            {% elif auth_user_id %}
+                <div class="user-pill">
+                    <span class="role-tag citizen">Citizen</span>
+                    <span class="user-name">{{ auth_user_name }}</span>
+                </div>
+                <a href="{% url 'user_dashboard' %}" class="btn-sm btn-primary">Dashboard</a>
+                <a href="{% url 'user_logout' %}" class="btn-sm btn-logout">Logout</a>
+
+            {% else %}
+                <a href="{% url 'user_login' %}" class="btn-sm" style="color: #cbd5e1; text-decoration: none;">Citizen Login</a>
+                <a href="{% url 'staff_login' %}" class="btn-sm" style="color: #cbd5e1; text-decoration: none;">Staff Login</a>
+                <a href="{% url 'admin_login' %}" class="btn-sm btn-primary">Admin Portal</a>
+            {% endif %}
+        </div>
+    </nav>
+    {% endblock %}
+
+    {% if messages %}
+    <div style="max-width: 1140px; margin: 15px auto; padding: 0 20px;">
+        {% for message in messages %}
+        <div style="padding: 12px 18px; margin-bottom: 10px; border-radius: 6px; font-weight: 500; font-size: 0.95rem; {% if message.tags == 'error' %}background:#fee2e2; color:#b91c1c; border-left: 4px solid #ef4444;{% elif message.tags == 'success' %}background:#dcfce7; color:#15803d; border-left: 4px solid #22c55e;{% else %}background:#e0f2fe; color:#0369a1; border-left: 4px solid #0ea5e9;{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+    <!-- Simple, Clean Institutional Footer -->
+    <footer>
+        <div style="max-width: 1140px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; padding-bottom: 24px;">
+            <div>
+                <h4 style="color: #ffffff; font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">Kerala Queue Management System (KQMS)</h4>
+                <p style="color: #94a3b8; font-size: 0.88rem; max-width: 500px; margin: 0;">
+                    Official digital queue platform for citizen-centric public service automation.
+                    Developed for MCA Advanced DBMS Coursework.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.88rem;">
+                <a href="{% url 'index_page' %}" style="color: #cbd5e1; text-decoration: none;">Home</a>
+                <a href="{% url 'generate_token' %}" style="color: #cbd5e1; text-decoration: none;">Get Token</a>
+                <a href="{% url 'queue_management' %}" style="color: #cbd5e1; text-decoration: none;">Live Queue</a>
+                <a href="{% url 'staff_login' %}" style="color: #cbd5e1; text-decoration: none;">Staff Portal</a>
+                <a href="{% url 'admin_login' %}" style="color: #cbd5e1; text-decoration: none;">Admin Login</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Kerala Queue Management System (KQMS) | Government of Kerala. All Rights Reserved.</p>
+        </div>
+    </footer>
+    {% endblock %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

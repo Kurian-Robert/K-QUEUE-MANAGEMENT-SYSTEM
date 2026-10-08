@@ -1,124 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>Service Management - KQMS</title>
+{% block title %}Service Management - KQMS{% endblock %}
 
-    <link rel="stylesheet"
-          href="{% static 'css/service_management.css' %}">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/service_management.css' %}">
+{% endblock %}
 
-<body>
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-    <!-- Sidebar -->
-    <div class="sidebar">
+{% block content %}
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>KQMS Admin</h2>
+    <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+    <a href="{% url 'office_management' %}">Offices</a>
+    <a href="{% url 'department_management' %}">Departments</a>
+    <a href="{% url 'service_management' %}" class="active">Services</a>
+    <a href="{% url 'staff_management' %}">Staff Management</a>
+    <a href="{% url 'user_management' %}">Manage Users</a>
+    <a href="{% url 'queue_management' %}">Queue Management</a>
+    <a href="{% url 'adbms_dashboard' %}">ADBMS Reports</a>
+    <a href="{% url 'admin_logout' %}" class="logout">Logout</a>
+</div>
 
-        <h2>KQMS</h2>
-
-        <a href="#">Dashboard</a>
-        <a href="#">Office Management</a>
-        <a href="#">Department Management</a>
-        <a href="#" class="active">Service Management</a>
-        <a href="#">Staff Management</a>
-        <a href="#">Queue Management</a>
-
-        <a href="#" class="logout">Logout</a>
-
+<!-- Main Content -->
+<div class="main-content">
+    <div class="header">
+        <div>
+            <h1>Service Management</h1>
+            <p>Manage the public services provided by government departments.</p>
+        </div>
     </div>
 
+    <!-- Service Table -->
+    <div class="card">
+        <h2>Active Services Directory ({{ services|length }})</h2>
 
-    <!-- Main Content -->
-    <div class="main-content">
-
-        <div class="header">
-            <div>
-                <h1>Service Management</h1>
-                <p>Manage the services provided by departments.</p>
-            </div>
-
-            <button class="add-btn">+ Add Service</button>
-        </div>
-
-
-        <!-- Service Table -->
-        <div class="card">
-
-            <h2>Service List</h2>
-
-            <div class="search">
-                <input type="text"
-                       placeholder="Search service...">
-
-                <button>Search</button>
-            </div>
-
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Service ID</th>
-                        <th>Service Name</th>
-                        <th>Department</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>1</td>
-                        <td>Driving Licence</td>
-                        <td>RTO</td>
-                        <td>Apply for driving licence</td>
-                        <td>
-                            <span class="active">Active</span>
-                        </td>
-                        <td>
-                            <button class="edit">Edit</button>
-                            <button class="delete">Delete</button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>2</td>
-                        <td>Vehicle Registration</td>
-                        <td>RTO</td>
-                        <td>Register a new vehicle</td>
-                        <td>
-                            <span class="active">Active</span>
-                        </td>
-                        <td>
-                            <button class="edit">Edit</button>
-                            <button class="delete">Delete</button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>3</td>
-                        <td>Birth Certificate</td>
-                        <td>Village Office</td>
-                        <td>Apply for birth certificate</td>
-                        <td>
-                            <span class="inactive">Inactive</span>
-                        </td>
-                        <td>
-                            <button class="edit">Edit</button>
-                            <button class="delete">Delete</button>
-                        </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+        <table>
+            <thead>
+                <tr>
+                    <th>Service ID</th>
+                    <th>Service Name</th>
+                    <th>Department</th>
+                    <th>Parent Office</th>
+                    <th>Estimated Duration</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td><strong>SRV-{{ service.service_id }}</strong></td>
+                    <td><strong>{{ service.service_name }}</strong></td>
+                    <td>{{ service.department.department_name }}</td>
+                    <td>{{ service.department.office.office_name }}</td>
+                    <td>{{ service.avg_service_min }} mins</td>
+                    <td>
+                        <span class="active">Active</span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" style="text-align:center;">No services found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}

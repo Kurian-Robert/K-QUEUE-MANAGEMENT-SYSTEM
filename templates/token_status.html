@@ -1,96 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+{% load static %}
 
-    <title>Token Status - KQMS</title>
+{% block title %}Token {{ token.token_number }} Status - KQMS{% endblock %}
 
-    <link rel="stylesheet"
-          href="{% static 'css/token_status.css' %}">
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/token_status.css' %}">
+{% endblock %}
 
-<body>
+{% block content %}
+<main style="padding: 40px 20px; max-width: 900px; margin: 0 auto;">
+    <div class="status-card">
+        <h1>Queue Token Status</h1>
+        <p>Live status and estimated queue position for your requested public service.</p>
 
-    <!-- Header -->
-
-    <header>
-
-        <h2>KQMS</h2>
-
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Get Token</a>
-            <a href="#" class="active">Token Status</a>
-            <a href="#">Logout</a>
-        </nav>
-
-    </header>
-
-
-    <!-- Main Content -->
-
-    <main>
-
-        <div class="status-card">
-
-            <h1>Token Status</h1>
-
-            <p>Check the current status of your queue token.</p>
-
-
-            <!-- Token Number -->
-
-            <div class="token-box">
-
-                <span>Your Token</span>
-
-                <h2>A105</h2>
-
+        <!-- Big Token Number Banner -->
+        <div class="token-box">
+            <span>Assigned Queue Token</span>
+            <h2>{{ token.token_number }}</h2>
+            <div style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">
+                Citizen: <strong>{{ token.citizen.citizen_name }}</strong>
             </div>
-
-
-            <!-- Token Details -->
-
-            <div class="details">
-
-                <div>
-                    <span>Office</span>
-                    <strong>RTO Office</strong>
-                </div>
-
-                <div>
-                    <span>Service</span>
-                    <strong>Driving Licence</strong>
-                </div>
-
-                <div>
-                    <span>Current Token</span>
-                    <strong>A104</strong>
-                </div>
-
-                <div>
-                    <span>People Ahead</span>
-                    <strong>1</strong>
-                </div>
-
+            <div style="margin-top: 10px;">
+                {% if token.status == 'Waiting' %}
+                    <span class="status-pill status-waiting">⏳ Waiting in Queue</span>
+                {% elif token.status == 'Serving' %}
+                    <span class="status-pill status-serving">🔔 Currently at Counter</span>
+                {% elif token.status == 'Completed' %}
+                    <span class="status-pill status-completed">✅ Service Completed</span>
+                {% elif token.status == 'Cancelled' %}
+                    <span class="status-pill status-cancelled">❌ Cancelled</span>
+                {% endif %}
             </div>
-
-
-            <!-- Status -->
-
-            <div class="status waiting">
-                Waiting
-            </div>
-
-
-            <button class="refresh-btn">
-                Refresh Status
-            </button>
-
         </div>
 
-    </main>
+        <!-- Real-Time Queue Position & Wait Estimation -->
+        {% if token.status == 'Waiting' %}
+        <div class="queue-position-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px;">
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px; text-align: center;">
+                <div style="font-size: 0.8rem; color: #1e40af; font-weight: 600;">People Ahead of You</div>
+                <div style="font-size: 1.8rem; font-weight: 800; color: #1e3a8a; margin: 4px 0;">{{ people_ahead }}</div>
+                <div style="font-size: 0.75rem; color: #64748b;">in {{ token.service.department.department_name }}</div>
+            </div>
 
-</body>
-</html>
+            <div style="background: #fefce8; border: 1px solid #fef08a; border-radius: 8px; padding: 14px; text-align: center;">
+                <div style="font-size: 0.8rem; color: #854d0e; font-weight: 600;">Est. Waiting Time</div>
+                <div style="font-size: 1.8rem; font-weight: 800; color: #713f12; margin: 4px 0;">
+                    {% widthratio people_ahead 1 token.service.avg_service_min %} mins
+                </div>
+                <div style="font-size: 0.75rem; color: #64748b;">@ ~{{ token.service.avg_service_min }} min/token</div>
+            </div>
+
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px; text-align: center;">
+                <div style="font-size: 0.8rem; color: #166534; font-weight: 600;">Now Serving at Dept</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: #14532d; margin: 6px 0;">
+                    {{ current_serving.token_number|default:"None" }}
+                </div>
+                <div style="font-size: 0.75rem; color: #64748b;">
+                    {% if current_serving.staff %}Counter by {{ current_serving.staff.staff_name }}{% else %}Awaiting Call{% endif %}
+                </div>
+            </div>
+        </div>
+        {% elif token.status == 'Serving' %}
+        <div style="background: #fef3c7; border: 2px dashed #f59e0b; border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: center;">
+            <h3 style="color: #92400e; margin: 0 0 6px 0;">🔔 Please Proceed to the Service Counter!</h3>
+            <p style="color: #78350f; font-size: 0.9rem; margin: 0;">
+                Attending Staff Officer: <strong>{{ token.staff.staff_name|default:"Assigned Counter Officer" }}</strong>
+                ({{ token.service.department.department_name }})
+            </p>
+        </div>
+        {% endif %}
+
+        <!-- Detailed Breakdown -->
+        <div class="details-section">
+            <div class="detail-row">
+                <span class="detail-label">Service Name</span>
+                <span class="detail-value">{{ token.service.service_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Department</span>
+                <span class="detail-value">{{ token.service.department.department_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Office & District</span>
+                <span class="detail-value">{{ token.service.department.office.office_name }} ({{ token.service.department.office.district|default:"Kerala" }})</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Standard Duration</span>
+                <span class="detail-value">{{ token.service.avg_service_min }} Minutes</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Booked At</span>
+                <span class="detail-value">{{ token.created_at|date:"M d, Y - h:i A" }}</span>
+            </div>
+            {% if token.staff %}
+            <div class="detail-row">
+                <span class="detail-label">Attending Counter Staff</span>
+                <span class="detail-value">{{ token.staff.staff_name }} ({{ token.staff.role }})</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Citizen Feedback Section -->
+        {% if token.status == 'Completed' %}
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 24px;">
+            <h3 style="color: #0f172a; margin-top: 0; font-size: 1rem;">⭐ Citizen Feedback & Rating</h3>
+            {% if feedback %}
+            <div style="margin-top: 8px;">
+                <div style="font-weight: 700; color: #d97706; font-size: 1.1rem;">
+                    {% if feedback.rating == 5 %}⭐⭐⭐⭐⭐ (5/5)
+                    {% elif feedback.rating == 4 %}⭐⭐⭐⭐ (4/5)
+                    {% elif feedback.rating == 3 %}⭐⭐⭐ (3/5)
+                    {% elif feedback.rating == 2 %}⭐⭐ (2/5)
+                    {% else %}⭐ (1/5){% endif %}
+                </div>
+                <p style="color: #475569; font-size: 0.9rem; margin-top: 6px;">{{ feedback.comments|default:"No comment provided." }}</p>
+                <span style="font-size: 0.75rem; color: #94a3b8;">Submitted on {{ feedback.created_at|date:"M d, Y" }}</span>
+            </div>
+            {% else %}
+            <form method="POST" style="margin-top: 10px;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="submit_feedback">
+                <div style="display: flex; gap: 12px; margin-bottom: 12px; align-items: center;">
+                    <label style="font-size: 0.88rem; font-weight: 600;">Rating:</label>
+                    <select name="rating" required style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                        <option value="5">⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                        <option value="4">⭐⭐⭐⭐ (4 - Very Good)</option>
+                        <option value="3">⭐⭐⭐ (3 - Satisfactory)</option>
+                        <option value="2">⭐⭐ (2 - Needs Improvement)</option>
+                        <option value="1">⭐ (1 - Unsatisfactory)</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <input type="text" name="comments" placeholder="Optional comments regarding service quality..." style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem;">
+                </div>
+                <button type="submit" style="background: #16a34a; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+                    Submit Rating
+                </button>
+            </form>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 12px; flex-direction: column;">
+            <button type="button" class="refresh-btn" onclick="window.location.reload();">
+                🔄 Refresh Live Queue Status
+            </button>
+            <a href="{% url 'generate_token' %}" style="display: block; text-align: center; text-decoration: none; padding: 10px; color: #2563eb; font-weight: 600; font-size: 0.9rem;">
+                + Book Another Service Token
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}

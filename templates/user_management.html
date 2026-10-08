@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Citizen User Management - KQMS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/office_management.css' %}">
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="logo">
+        <h2>KQMS</h2>
+        <p>Admin Panel</p>
+    </div>
+
+    <nav>
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'office_management' %}">Offices</a>
+        <a href="{% url 'department_management' %}">Departments</a>
+        <a href="{% url 'service_management' %}">Services</a>
+        <a href="{% url 'staff_management' %}">Staff Management</a>
+        <a href="{% url 'user_management' %}" class="active">Manage Users</a>
+        <a href="{% url 'queue_management' %}">Live Queue</a>
+        <a href="{% url 'adbms_dashboard' %}">ADBMS Reports</a>
+    </nav>
+
+    <a href="{% url 'admin_logout' %}" class="logout">Logout</a>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+    <header class="topbar">
+        <div>
+            <h1>Citizen / User Management</h1>
+            <p>View registered citizens accessing government queue services.</p>
+        </div>
+        <div class="admin-profile">
+            <div class="profile-icon">A</div>
+            <span>Administrator</span>
+        </div>
+    </header>
+
+    <!-- Stats -->
+    <section class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div>
+                <h3>{{ citizens|length }}</h3>
+                <p>Total Registered Citizens</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✓</div>
+            <div>
+                <h3>Active</h3>
+                <p>Citizen Profiles</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Table Section -->
+    <section class="management-section">
+        <div class="section-header">
+            <div>
+                <h2>Citizen Directory</h2>
+                <p>All citizens registered in the Kerala Queue Management System.</p>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Citizen ID</th>
+                        <th>Full Name</th>
+                        <th>Contact Phone</th>
+                        <th>Email Address</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for citizen in citizens %}
+                    <tr>
+                        <td><strong>CIT-{{ citizen.citizen_id }}</strong></td>
+                        <td>{{ citizen.citizen_name }}</td>
+                        <td>{{ citizen.phone }}</td>
+                        <td>{{ citizen.email }}</td>
+                        <td>
+                            <span class="status active-status">Active</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="text-align:center;">No registered citizens found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+{% endblock %}
